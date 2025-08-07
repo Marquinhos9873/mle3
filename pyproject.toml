@@ -1,0 +1,38 @@
+[project]
+name = "mle2"
+version = "0.0.0"
+description = "Proyecto mle2 dsrp"
+authors = [
+    {name = "Marquinhos",email = "pradovasquezm@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "scikit-learn (>=1.7.1,<2.0.0)",
+    "xgboost (>=3.0.3,<4.0.0)",
+    "lightgbm (>=4.6.0,<5.0.0)",
+    "catboost (>=1.2.8,<2.0.0)",
+    "optuna (>=4.4.0,<5.0.0)",
+    "shap (>=0.48.0,<0.49.0)",
+    "plotly (>=6.2.0,<7.0.0)",
+    "fastapi (>=0.116.1,<0.117.0)",
+    "uvicorn (==0.34.0)",
+    "typer (>=0.16.0,<0.17.0)",
+    "rich (>=14.1.0,<15.0.0)",
+    "ipywidgets (>=8.1.7,<9.0.0)",
+    "tqdm (>=4.67.1,<5.0.0)",
+    "joblib (>=1.5.1,<2.0.0)",
+    "dagshub (>=0.6.2,<0.7.0)",
+    "mlflow (<3)",
+    "feast (==0.51.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+cookiecutter = "^2.6.0"
+
