@@ -1,0 +1,15 @@
+artifact_uri: file:///home/marquinhoslinux/mle2/notebooks/mlruns/0/5605987ba26849a3911f4543426383f7/artifacts
+end_time: 1755633346556
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 5605987ba26849a3911f4543426383f7
+run_name: Random Forest
+run_uuid: 5605987ba26849a3911f4543426383f7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1755633346527
+status: 4
+tags: []
+user_id: marquinhoslinux

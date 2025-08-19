@@ -18,7 +18,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 
-'''ef proceso_epsilon():
+'''def proceso_epsilon():
     valor_muestreo_neighbor = input('Valor de muestreo para el modelo de vecinos')
     minimun_samples = valor_muestreo_neighbor
     neighbors = NearestNeighbors(n_neighbors=minimun_samples)
@@ -40,7 +40,7 @@ from sklearn.preprocessing import StandardScaler
 proceso_epsilon()
 #procesar con dbscan, 18 clusters(numero de columnas)'''
 
-
+#deberia usar calses para llamar a las funciones y solo depender de ingresar los argumentos?, en ves de usar clase pense usar funciones y llamarlas directamente
 
 
 def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_value="mean"):
@@ -90,11 +90,16 @@ def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_va
 
         print(f"{run_name} - Accuracy: {acc:.4f} | F1: {f1:.4f}")
 
+    return pipeline
+    
 '''def config_uri():
     uri = input("Introduce la URL del servidor MLflow: ")
     mlflow.set_tracking_uri(uri)
     print(f"Tracking URI configurado en: {uri}")
 
+
+
+Aca quiero poner la ruta de contador de experimentos en el mismo repo, ejemplo con os
 
 def crear_experimento_mlflow(nombre_experimento: str = None, ruta_contador="contador_experimentos.txt"):
     if os.path.exists(ruta_contador):
