@@ -1,3 +1,20 @@
+import mlflow
+from datetime import datetime
+import os
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from catboost import CatBoostClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.cluster import KMeans, DBSCAN
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import StackingClassifier, BaggingClassifier, RandomForestClassifier, VotingClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.metrics import accuracy_score, f1_score
+from sklearn.preprocessing import StandardScaler
+from 
 from feast import (
     Entity,
     FeatureStore,
@@ -7,6 +24,19 @@ from feast import (
     FileSource
 )
 from loguru
+
+
+
+
+
+
+
+
+
+
+
+
+
 class FeatureProcessor:
     def __init__(self, datos: pd.DataFrame, name_pipeline: str)
     self.datos = datos
@@ -21,10 +51,13 @@ class FeatureProcessor:
                 ("pca", PCA(n_components=n_components))
             ]
         )
+        pipe_datos = pipe.fit_transform(self.datos[list(columnas)])
+        variance_ratio = pipe_datos.explained_variance_ratio
+        #agregar aqui y devolver como variance_ratio en el return
         return pd.DataFrame(
             pipe.fit_transform(self.datos[columnas]),
             columns=[f"Pipe_feature{i+1}" for i in range(n_components)]
-        )
+        ), variance_ratio
 #Una ves que se creen los pca_features agregarse al dataset final
       def run(self, columnas_promedio: tuple[str, ...], num_columnas: int) -> pd.DataFrame:
         #tengo un problema con el pyproject vim/nano
@@ -67,7 +100,24 @@ class FeatureProcessor:
         
         
         
-    
+class Metricsdeploy(variance_ratio):
+    def pcavarianza(self, varianza = variance_ratio):
+        return print(f'La varianza que se explica despues del PCA:{varianza}')   
+    def clusteringmetrics(self, X_scaled, labels):
+        silhouette = silhouette_score(X_scaled, labels)
+        dbi = davies_bouldin_score(X_scaled, labels)
+        chi = calinski_harabasz_score(X_scaled, labels)
+        ari = adjusted_rand_score(y, labels) # compara clusters con etiquetas reales
+        nmi = normalized_mutual_info_score(y, labels)
+        
+        print(f"Silhouette Score: {silhouette:.3f}")
+        print(f"Davies-Bouldin Index: {dbi:.3f}")
+        print(f"Calinski-Harabasz Index: {chi:.3f}")
+        print(f"Adjusted Rand Index {ari:.3f}")
+        print(f"Normalized Mutual Info: {nmi:.3f}")
+        
+
+        return 
     
     
     
@@ -168,17 +218,16 @@ def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_va
     pass
 
 class ProcesoMLFLOW:
-
-    '''def config_uri():
+    '''def config_uri(self, uri: str):
     uri = input("Introduce la URL del servidor MLflow: ")
     mlflow.set_tracking_uri(uri)
-    print(f"Tracking URI configurado en: {uri}")
-
+    tracking = print(f"Tracking URI configurado en: {uri}")
+    return tracking
 
 
 Aca quiero poner la ruta de contador de experimentos en el mismo repo, ejemplo con os
 
-def crear_experimento_mlflow(nombre_experimento: str = None, ruta_contador="contador_experimentos.txt"):
+def crear_experimento_mlflow(nombre_experimento: str, ruta_contador="contador_experimentos.txt"):
     if os.path.exists(ruta_contador):
         with open(ruta_contador, "r") as f:
             ultimo_numero = int(f.read().strip())
