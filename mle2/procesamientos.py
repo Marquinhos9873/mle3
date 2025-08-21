@@ -1,41 +1,205 @@
-import mlflow
-from datetime import datetime
-import os
+from feast import (
+    Entity,
+    FeatureStore,
+    FeatureService,
+    FeatureView,
+    Field,
+    FileSource
+)
+from loguru
+class FeatureProcessor:
+    def __init__(self, datos: pd.DataFrame, name_pipeline: str)
+    self.datos = datos
+    self.name_pipeline = name_pipeline
+    self.feature_table = None
+
+    def impute_scale(self, columnas: tuple[str, ...] n_components: int = 3) -> pd.DataFrame:
+        pipe = Pipeline(
+            steps=[
+                ("imputer_mean", SimpleImputer(strategy="mean")),
+                ("std_scaling", StandardScaler()),
+                ("pca", PCA(n_components=n_components))
+            ]
+        )
+        return pd.DataFrame(
+            pipe.fit_transform(self.datos[columnas]),
+            columns=[f"Pipe_feature{i+1}" for i in range(n_components)]
+        )
+#Una ves que se creen los pca_features agregarse al dataset final
+      def run(self, columnas_promedio: tuple[str, ...], num_columnas: int) -> pd.DataFrame:
+        #tengo un problema con el pyproject vim/nano
+        #logger.info(f"Inicializando pipeline {self.name_pipeline}")
+        numerics = self.impute_scale()
+        media_stress = (self.datos[list(columnas_promedio)].mean()/num_columnas)
+        media_stress = pd.DataFrame(stress_mean, columns=["stress_exposure_mean"])
+        
+        modeling_dataset = pd.concat([numerics, stress_mean], axis=1)
+        # Dataset Previo el pipeline
+        pipe = Pipeline(
+            steps=[
+                ("feature_selection", VarianceThreshold()),
+                ("scaling_robust", RobustScaler())
+            ]
+        )
+        self.feature_table =  pd.DataFrame(
+            pipe.fit_transform(modeling_dataset),
+            columns=modeling_dataset.columns
+        )
+          
+'''       self.feature_table["booking_id"] = [str(uuid.uuid4()) for _ in range(self.feature_table.shape[0])]
+        self.feature_table["event_timestamp"] = [datetime.now() for _ in range(self.feature_table.shape[0])]
+'''
+        import time
+        time.sleep(1)
+        self.feature_table["created"] = [datetime.now() for _ in range(self.feature_table.shape[0])]
+
+        return self.feature_table
+
+    def write_feature_table(self, filepath: str) -> None:
+        """Escribimos la feature table final para modelamiento
+        """
+
+        if not self.feature_table.empty: # -> True o False
+            self.feature_table.to_parquet(f"{filepath}.parquet", index=False)
+            self.feature_table.to_csv(f"{filepath}.csv", index=False)
+        else:
+            raise Exception("Ejecutar el comando .run()")            
+        
+        
+        
+    
+    
+    
+    
+
+class GuardadoFeature:
 
 
-class PREPROCESADOR():
+
+
+    
+
+
+class Procesoexperimento:
+    
+
+
+'''def proceso_epsilon():
+    valor_muestreo_neighbor = input('Valor de muestreo para el modelo de vecinos')
+    minimun_samples = valor_muestreo_neighbor
+    neighbors = NearestNeighbors(n_neighbors=minimun_samples)
+    neighbors_fit = neighbors.fit(X_scaled)
+    distances, indices = neighbors_fit.kneighbors(X_scaled)
+    
+    # Ordenar las distancias al k-ésimo vecino
+    distances = np.sort(distances[:, min_samples-1])
+    plt.plot(distances)
+    plt.ylabel("Distancia al {}-ésimo vecino".format(min_samples))
+    plt.xlabel("Puntos ordenados")
+    plt.show()
+
+    kneighbors_eps = input('Valor aproximado para el epsilon en base al grafico:')
+    dbscan = DBSCAN(eps=kneighbors_eps, min_samples=minimun_samples)
+    labels = dbscan.fit_predict(X_scaled)
+    
+
+proceso_epsilon()
+#procesar con dbscan, 18 clusters(numero de columnas)'''
+
+#deberia usar calses para llamar a las funciones y solo depender de ingresar los argumentos?, en ves de usar clase pense usar funciones y llamarlas directamente
+
+
+def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_value="mean"):
+    if model is None:
+        model = input(
+            "Que modelo desea aplicar?\n"
+            "(1) Random Forest\n"
+            "(2) Bagging\n"
+            "(3) Voting\n"
+            "(4) XGBoost\n"
+            "(5) LGBM\n"
+            "(6) Catboost\n"
+        )
+
+    models = {
+        "1": ("Random Forest", RandomForestClassifier()),
+        "2": ("Bagging", BaggingClassifier()),
+        "3": ("Voting", VotingClassifier(estimators=[
+            ("rf", RandomForestClassifier()),
+            ("bag", BaggingClassifier()),
+        ], voting="soft")),
+        "4": ("XGBoost", XGBClassifier(max_depth=5, n_estimators=100)),
+        "5": ("LGBM", LGBMClassifier()),
+        "6": ("CatBoost", CatBoostClassifier(verbose=0)),
+    }
+
+    if model not in models:
+        print("Opción inválida.")
+        return
+
+    run_name, algorithm = models[model]
+
+    with mlflow.start_run(run_name=run_name):
+        pipeline = Pipeline([
+            ("imputer", SimpleImputer(strategy=input_value)),
+            (run_name, algorithm),
+        ])
+
+        pipeline.fit(X_train, y_train)
+        predictions = pipeline.predict(X_test)
+
+        acc = accuracy_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions, average="weighted")
+
+        mlflow.log_params({"model": run_name, "imputer": input_value})
+        mlflow.log_metrics({"accuracy": acc, "f1": f1})
+
+        print(f"{run_name} - Accuracy: {acc:.4f} | F1: {f1:.4f}")
+
+    return pipeline
+    
+
+
+
+
+
+
+
     pass
 
-class PROCESO():
-    pass
+class ProcesoMLFLOW:
 
-class GUARDADOMLFLOW():
-    pass
+    '''def config_uri():
+    uri = input("Introduce la URL del servidor MLflow: ")
+    mlflow.set_tracking_uri(uri)
+    print(f"Tracking URI configurado en: {uri}")
 
-class 
 
-''' ----------------------------------------------------------------------- '''
 
-def crear_experimento_mlflow(ruta_contador="contador_experimentos.txt"):
+Aca quiero poner la ruta de contador de experimentos en el mismo repo, ejemplo con os
+
+def crear_experimento_mlflow(nombre_experimento: str = None, ruta_contador="contador_experimentos.txt"):
     if os.path.exists(ruta_contador):
         with open(ruta_contador, "r") as f:
             ultimo_numero = int(f.read().strip())
     else:
         ultimo_numero = 0
+
     nuevo_numero = ultimo_numero + 1
     with open(ruta_contador, "w") as f:
         f.write(str(nuevo_numero))
-  
+
     fecha_actual = datetime.now().strftime("%d/%m/%y")
-    nombre_experimento = f"Experimento - {nuevo_numero}, {fecha_actual}"
-    mlflow.create_experiment(nombre_experimento)
+    if nombre_experimento is None:
+        nombre_experimento = f"Experimento - {nuevo_numero}, {fecha_actual}"
 
-    return exp_name
+    try:
+        exp_id = mlflow.create_experiment(nombre_experimento)
+    except Exception:
+        exp_id = mlflow.get_experiment_by_name(nombre_experimento).experiment_id
 
-def decomposicion_series(data):
-    decomposition = seasonal_decompose(
-    air_passengers['#Passengers'], 
-    model='aditive', 
-    period=12
-    )
-     
+    print(f"Usando experimento '{nombre_experimento}' con ID {exp_id}")
+    return exp_id'''
+
+
+    
