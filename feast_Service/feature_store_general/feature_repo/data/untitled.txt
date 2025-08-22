@@ -1,0 +1,41 @@
+Según la evidencia científica, los factores que tendrían mayor peso en relación con el estrés son:
+
+Nivel de ansiedad (anxiety_level): La ansiedad y el estrés están intrínsecamente relacionados. La investigación muestra consistentemente que la ansiedad es uno de los predictores más fuertes del estrés, ya que ambos comparten vías fisiológicas y psicológicas similares.
+Calidad del sueño (sleep_quality): Existe una relación bidireccional muy significativa entre el sueño y el estrés. El estrés afecta negativamente la calidad del sueño, y a su vez, el mal sueño aumenta la vulnerabilidad al estrés y reduce la capacidad de afrontamiento.
+Apoyo social (social_support): Numerosos estudios demuestran que el apoyo social funciona como un amortiguador crucial contra el estrés. La falta de redes de apoyo sólidas se asocia consistentemente con mayores niveles de estrés y peor capacidad de recuperación.
+Depresión (depression): La depresión y el estrés crónico están fuertemente interrelacionados. La comorbilidad entre ambas condiciones es alta, y cada una puede exacerbar a la otra.
+Autoestima (self_esteem): La autoestima juega un papel fundamental en cómo las personas perciben y responden a los estresores. Una baja autoestima se asocia con mayor vulnerabilidad al estrés y menor resiliencia.
+Estos factores son consistentemente identificados en la literatura científica como los más influyentes en la experiencia del estrés, aunque su importancia relativa puede variar según las características individuales y el contexto específico.
+
+stress()
+
+Factores de mayor peso:
+Ansiedad o tensión (Preguntas 4 y 6)
+Peso científico: Máximo. La ansiedad es un componente central del estrés, activando el eje HPA (hipotálamo-hipófisis-suprarrenal) y liberando cortisol. Su presencia repetida (preguntas 4 y 6) refuerza su relevancia.
+Problemas de sueño (Pregunta 5)
+Peso científico: Muy alto. La relación entre estrés y sueño es bidireccional: el estrés altera la arquitectura del sueño (especialmente el sueño profundo), y el mal sueño aumenta la reactividad al estrés. Es un predictor consistente en estudios clínicos.
+Palpitaciones o taquicardia (Pregunta 3)
+Peso científico: Alto. Es un síntoma fisiológico directo de la respuesta de "lucha o huida" (activación del sistema nervioso simpático). Indica estrés agudo y es un marcador objetivo de disregulación autonómica.
+Sobrecarga académica (Pregunta 13)
+Peso científico: Alto. En contextos estudiantiles, la carga académica es uno de los estresores más potentes. Se asocia con agotamiento, burnout y afecta la salud mental a largo plazo.
+Irritabilidad (Pregunta 8)
+Peso científico: Alto. Es un síntoma conductual clave del estrés crónico. Refleja agotamiento de recursos psicológicos y predice conflictos interpersonales, que a su vez retroalimentan el estrés.
+Dificultad para concentrarse (Pregunta 9)
+Peso científico: Alto. El estrés altera la función prefrontal, afectando memoria, atención y toma de decisiones. Es un indicador temprano de deterioro cognitivo por estrés.
+Factores de peso moderado-alto:
+Tristeza o bajo estado de ánimo (Pregunta 10)
+Peso científico: Moderado-alto. La depresión y el estrés comparten mecanismos neurobiológicos (e.g., inflamación, disfunción del eje HPA). Su presencia sugiere estrés crónico no gestionado.
+Soledad o aislamiento (Pregunta 12)
+Peso científico: Moderado-alto. La falta de apoyo social amplifica la percepción del estrés y reduce la resiliencia. Es un factor de riesgo independiente para problemas de salud mental.
+Falta de confianza en rendimiento académico (Pregunta 20)
+Peso científico: Moderado-alto. Relacionado con autoeficacia y autoestima, que modulan cómo se perciben y afrontan los estresores. Baja confianza aumenta la vulnerabilidad al estrés.
+Factores de peso moderado:
+Dolores de cabeza (Pregunta 7): Síntoma físico común, pero menos específico (puede tener múltiples causas).
+Competencia con pares (Pregunta 14): Contextual; su impacto depende de la personalidad y entorno.
+Dificultades con profesores (Pregunta 16): Estresor interpersonal, pero menos universal que los factores anteriores.
+Factores de peso menor:
+Cambios de peso (Pregunta 24): Consecuencia a largo plazo, menos sensible para evaluar estrés agudo.
+Asistencia a clases (Pregunta 23): Más un resultado que un factor causal.
+Entorno de alojamiento (Pregunta 19): Variable contextual, con impacto indirecto.
+
+StressLevel()

@@ -12,9 +12,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import (
+    silhouette_score, davies_bouldin_score, calinski_harabasz_score,
+    adjusted_rand_score, normalized_mutual_info_score
+)
 from sklearn.preprocessing import StandardScaler
-from 
 from feast import (
     Entity,
     FeatureStore,
@@ -32,40 +34,43 @@ from loguru
 
 
 
-
-
-
+# to_train_stresslevel = FeatureProcessor(datos = train_stresslevel, name_pipeline = 'stresslevel_pipeline')
+# to_train_stresslevel.run(columnas_promedio = ('','','',''))
 
 
 class FeatureProcessor:
-    def __init__(self, datos: pd.DataFrame, name_pipeline: str)
-    self.datos = datos
-    self.name_pipeline = name_pipeline
-    self.feature_table = None
+    def __init__(self, datos: pd.DataFrame, name_pipeline: str):
+        self.datos = datos
+        self.name_pipeline = name_pipeline
+        self.feature_table = None
 
-    def impute_scale(self, columnas: tuple[str, ...] n_components: int = 3) -> pd.DataFrame:
+    def scale(self, columnas: tuple[str, ...], components: int = 3) -> pd.DataFrame:
+        pca = PCA(n_components = components)
         pipe = Pipeline(
             steps=[
-                ("imputer_mean", SimpleImputer(strategy="mean")),
                 ("std_scaling", StandardScaler()),
-                ("pca", PCA(n_components=n_components))
+                ("pca", PCA(n_components=components))
             ]
         )
-        pipe_datos = pipe.fit_transform(self.datos[list(columnas)])
-        variance_ratio = pipe_datos.explained_variance_ratio
+        variance_ratio = pca.explained_variance_ratio
+        print(f"Variance ratio: {variance_ratio}")
         #agregar aqui y devolver como variance_ratio en el return
         return pd.DataFrame(
             pipe.fit_transform(self.datos[columnas]),
             columns=[f"Pipe_feature{i+1}" for i in range(n_components)]
-        ), variance_ratio
+        )
+
+
 #Una ves que se creen los pca_features agregarse al dataset final
+
+
       def run(self, columnas_promedio: tuple[str, ...], num_columnas: int) -> pd.DataFrame:
         #tengo un problema con el pyproject vim/nano
         #logger.info(f"Inicializando pipeline {self.name_pipeline}")
-        numerics = self.impute_scale()
-        media_stress = (self.datos[list(columnas_promedio)].mean()/num_columnas)
-        media_stress = pd.DataFrame(stress_mean, columns=["stress_exposure_mean"])
-        
+        numerics = self.scale()
+        media_stress = (self.datos[list(columnas_promedio)].mean(axis=1))
+        media_df = pd.DataFrame({"stress_exposure_mean": media_stress})
+          
         modeling_dataset = pd.concat([numerics, stress_mean], axis=1)
         # Dataset Previo el pipeline
         pipe = Pipeline(
@@ -79,12 +84,6 @@ class FeatureProcessor:
             columns=modeling_dataset.columns
         )
           
-'''       self.feature_table["booking_id"] = [str(uuid.uuid4()) for _ in range(self.feature_table.shape[0])]
-        self.feature_table["event_timestamp"] = [datetime.now() for _ in range(self.feature_table.shape[0])]
-'''
-        import time
-        time.sleep(1)
-        self.feature_table["created"] = [datetime.now() for _ in range(self.feature_table.shape[0])]
 
         return self.feature_table
 
@@ -101,8 +100,8 @@ class FeatureProcessor:
         
         
 class Metricsdeploy(variance_ratio):
-    def pcavarianza(self, varianza = variance_ratio):
-        return print(f'La varianza que se explica despues del PCA:{varianza}')   
+    def pcavarianza(self, variance_ratio):
+        return print(f'La varianza que se explica despues del PCA:{variance_ratio}')   
     def clusteringmetrics(self, X_scaled, labels):
         silhouette = silhouette_score(X_scaled, labels)
         dbi = davies_bouldin_score(X_scaled, labels)
@@ -110,14 +109,12 @@ class Metricsdeploy(variance_ratio):
         ari = adjusted_rand_score(y, labels) # compara clusters con etiquetas reales
         nmi = normalized_mutual_info_score(y, labels)
         
-        print(f"Silhouette Score: {silhouette:.3f}")
-        print(f"Davies-Bouldin Index: {dbi:.3f}")
-        print(f"Calinski-Harabasz Index: {chi:.3f}")
-        print(f"Adjusted Rand Index {ari:.3f}")
-        print(f"Normalized Mutual Info: {nmi:.3f}")
-        
-
-        return 
+        Sil = print(f"Silhouette Score: {silhouette:.3f}")
+        Dbouldin = print(f"Davies-Bouldin Index: {dbi:.3f}")
+        Charab = print(f"Calinski-Harabasz Index: {chi:.3f}")
+        ADI = print(f"Adjusted Rand Index {ari:.3f}")
+        NM = print(f"Normalized Mutual Info: {nmi:.3f}")
+        return Sil, Dbouldin, Charab, ADI, NM 
     
     
     
@@ -131,29 +128,27 @@ class GuardadoFeature:
 
 
 class Procesoexperimento:
+    def proceso_epsilon(n_muestreo: int , ):
+        #Numero de muestreo = valor definido para ver donde esta el alza en la varianza
+        neighbors = NearestNeighbors(n_neighbors=n_muestreo)
+        neighbors_fit = neighbors.fit(X_scaled)
+        distances, indices = neighbors_fit.kneighbors(X_scaled)
+        
+        # Ordenar las distancias al k-ésimo vecino
+        distances = np.sort(distances[:, min_samples-1])
+        plt.plot(distances)
+        plt.ylabel("Distancia al {}-ésimo vecino".format(min_samples))
+        plt.xlabel("Puntos ordenados")
+        plt.show()
+    
+        kneighbors_eps = input('Valor aproximado para el epsilon en base al grafico:')
+        dbscan = DBSCAN(eps=kneighbors_eps, min_samples=minimun_samples)
+        labels = dbscan.fit_predict(X_scaled)
+
+        return
+        
     
 
-
-'''def proceso_epsilon():
-    valor_muestreo_neighbor = input('Valor de muestreo para el modelo de vecinos')
-    minimun_samples = valor_muestreo_neighbor
-    neighbors = NearestNeighbors(n_neighbors=minimun_samples)
-    neighbors_fit = neighbors.fit(X_scaled)
-    distances, indices = neighbors_fit.kneighbors(X_scaled)
-    
-    # Ordenar las distancias al k-ésimo vecino
-    distances = np.sort(distances[:, min_samples-1])
-    plt.plot(distances)
-    plt.ylabel("Distancia al {}-ésimo vecino".format(min_samples))
-    plt.xlabel("Puntos ordenados")
-    plt.show()
-
-    kneighbors_eps = input('Valor aproximado para el epsilon en base al grafico:')
-    dbscan = DBSCAN(eps=kneighbors_eps, min_samples=minimun_samples)
-    labels = dbscan.fit_predict(X_scaled)
-    
-
-proceso_epsilon()
 #procesar con dbscan, 18 clusters(numero de columnas)'''
 
 #deberia usar calses para llamar a las funciones y solo depender de ingresar los argumentos?, en ves de usar clase pense usar funciones y llamarlas directamente
@@ -215,7 +210,6 @@ def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_va
 
 
 
-    pass
 
 class ProcesoMLFLOW:
     '''def config_uri(self, uri: str):
