@@ -46,32 +46,26 @@ class FeatureProcessor:
 
     def scale(self, columnas: tuple[str, ...], components: int = 3) -> pd.DataFrame:
         pca = PCA(n_components = components)
-        pipe = Pipeline(
-            steps=[
-                ("std_scaling", StandardScaler()),
-                ("pca", PCA(n_components=components))
-            ]
-        )
-        variance_ratio = pca.explained_variance_ratio
+        pipe = Pipeline(steps=[ ("std_scaling", StandardScaler()),("pca", pca)])
+        X = self.datos.loc[:, list(columnas)]
+        Z = pipe.fit_transform(X)
+        variance_ratio = pca.explained_variance_ratio_
         print(f"Variance ratio: {variance_ratio}")
         #agregar aqui y devolver como variance_ratio en el return
-        return pd.DataFrame(
-            pipe.fit_transform(self.datos[columnas]),
-            columns=[f"Pipe_feature{i+1}" for i in range(n_components)]
-        )
+        pipe_df = pd.DataFrame(Z, columns=[f"Pipe_feature{i+1}" for i in range(components)])
+        return pipe_df, variance_ratio
 
 
 #Una ves que se creen los pca_features agregarse al dataset final
 
 
-      def run(self, columnas_promedio: tuple[str, ...], num_columnas: int) -> pd.DataFrame:
+    def run(self, columnas_promedio: tuple[str, ...], num_columnas: int) -> pd.DataFrame:
         #tengo un problema con el pyproject vim/nano
         #logger.info(f"Inicializando pipeline {self.name_pipeline}")
-        numerics = self.scale()
+        #numerics = self.scale()
         media_stress = (self.datos[list(columnas_promedio)].mean(axis=1))
         media_df = pd.DataFrame({"stress_exposure_mean": media_stress})
-          
-        modeling_dataset = pd.concat([numerics, stress_mean], axis=1)
+        modeling_dataset = pd.concat([pipe_df, media_df], axis=1)
         # Dataset Previo el pipeline
         pipe = Pipeline(
             steps=[
@@ -98,10 +92,13 @@ class FeatureProcessor:
             raise Exception("Ejecutar el comando .run()")            
         
         
-        
-class Metricsdeploy(variance_ratio):
+        #ayuda aca 
+class Metricsdeploy:
     def pcavarianza(self, variance_ratio):
-        return print(f'La varianza que se explica despues del PCA:{variance_ratio}')   
+        return print(f'La varianza que se explica despues del PCA:{variance_ratio}')
+
+    def clasificacionmetrics():
+        return
     def clusteringmetrics(self, X_scaled, labels):
         silhouette = silhouette_score(X_scaled, labels)
         dbi = davies_bouldin_score(X_scaled, labels)
@@ -180,7 +177,6 @@ def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_va
 
     if model not in models:
         print("Opción inválida.")
-        return
 
     run_name, algorithm = models[model]
 
@@ -211,15 +207,138 @@ def experiment_definition(X_train, X_test, y_train, y_test, model=None, input_va
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class UnsupervisedProcessor:
+
+    def __init__(self, dataframe: pd.DataFrame, scaler, cluster_algorithm, dim_reduction_algorithm) -> None:
+        self.original_data = dataframe
+        self.cluster_pipeline = Pipeline(
+            steps=[
+                ("scaler", scaler),
+                ("cluster_algorithm", cluster_algorithm)
+            ]
+        )
+        self.dim_reduction_pipeline = Pipeline(
+            steps=[
+                ("scaler", scaler),
+                ("dim_reduction", dim_reduction_algorithm)
+            ]
+        )
+
+    def process_clustering(self, columns: list) -> pd.DataFrame:
+
+        tmp_data_to_process = self.original_data[columns]
+        self.cluster_pipeline.fit(tmp_data_to_process)
+        clustering_df = pd.concat(
+            [
+                self.original_data[["CustomerID"]],
+                self.original_data[self.original_data.columns[-3:]],
+                pd.DataFrame(
+                    self.cluster_pipeline.steps[1][1].labels_,
+                    columns=["cluster"]
+                )
+            ],
+            axis=1
+        )
+
+        return clustering_df
+
+    def process_dim_reduction(self, columns: list) -> pd.DataFrame:
+
+        tmp_data_to_process = self.original_data[columns]
+        return pd.concat(
+            [
+                self.original_data[["CustomerID"]],
+                pd.DataFrame(
+                    self.dim_reduction_pipeline.fit_transform(tmp_data_to_process),
+                    columns=["dim1", "dim2"]
+                )
+            ],
+            axis=1
+        )
+
+    def run(self, columns: list) -> pd.DataFrame:
+
+        _cluster_results = self.__process_clustering(columns=columns)
+        _dim_reduction_results = self.__process_dim_reduction(columns=columns)
+
+        return _cluster_results.merge(_dim_reduction_results,on="CustomerID")
+        
+
+def plot_results(data: pd.DataFrame):
+    sns.scatterplot(x="dim1", y="dim2", data=df_final, hue="cluster",palette="tab10")
+
+def calculate_clustering_metrics(data: pd.DataFrame):
+
+    print(
+        f"""
+        PCA varinza explciada: {}
+        Métrica Silloutte: {silhouette_score(X=data[customer_data_raw.columns[-3:]], labels=np.array(data['cluster']))}
+        Métrica calinski_harabasz: {calinski_harabasz_score(X=data[customer_data_raw.columns[-3:]], labels=np.array(data['cluster']))}
+        Métrica davies_bouldin: {davies_bouldin_score(X=data[customer_data_raw.columns[-3:]], labels=np.array(data['cluster']))}
+        Adjusted Rand Index: { adjusted_rand_score(y, labels_pred)}
+        Normalized Mutual Score : {normalized_mutual_info_score(y, labels)}
+        """
+        )
+
+
+    plot_results(data=data)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class ProcesoMLFLOW:
-    '''def config_uri(self, uri: str):
-    uri = input("Introduce la URL del servidor MLflow: ")
-    mlflow.set_tracking_uri(uri)
-    tracking = print(f"Tracking URI configurado en: {uri}")
-    return tracking
+    def config_uri(self, uri: str):
+        uri = input("Introduce la URL del servidor MLflow: ")
+        mlflow.set_tracking_uri(uri)
+        tracking = print(f"Tracking URI configurado en: {uri}")
+        return tracking
+    
 
 
-Aca quiero poner la ruta de contador de experimentos en el mismo repo, ejemplo con os
+'''Aca quiero poner la ruta de contador de experimentos en el mismo repo, ejemplo con os
 
 def crear_experimento_mlflow(nombre_experimento: str, ruta_contador="contador_experimentos.txt"):
     if os.path.exists(ruta_contador):
