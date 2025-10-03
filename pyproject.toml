@@ -6,7 +6,7 @@ authors = [
     {name = "Marquinhos",email = "pradovasquezm@gmail.com"}
 ]
 license = {text = "MIT"}
-readme = "README.md"
+readme = ""
 requires-python = ">=3.11"
 dependencies = [
     "scikit-learn (>=1.7.1,<2.0.0)",
@@ -32,6 +32,9 @@ dependencies = [
     "statsmodels (>=0.14.5,<0.15.0)",
     "matplotlib (>=3.10.5,<4.0.0)",
     "umap-learn (>=0.5.9.post2,<0.6.0)",
+    "jupyter>=1.1.1",
+    "lab>=8.5",
+    "seaborn>=0.13.2",
 ]
 
 
