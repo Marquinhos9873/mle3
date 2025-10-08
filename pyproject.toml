@@ -35,6 +35,7 @@ dependencies = [
     "jupyter>=1.1.1",
     "lab>=8.5",
     "seaborn>=0.13.2",
+    "evidently>=0.5.0",
 ]
 
 
