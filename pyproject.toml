@@ -36,6 +36,8 @@ dependencies = [
     "lab>=8.5",
     "seaborn>=0.13.2",
     "evidently>=0.5.0",
+    "logger>=1.4",
+    "cookiecutter>=2.6.0",
 ]
 
 
