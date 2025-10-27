@@ -1,6 +1,83 @@
-from hyperopt import fmin, tpe, space_eval, Trials, STATUS_OK, hp
+from hyperopt import (fmin,
+                      tpe,
+                      space_eval,
+                      Trials,
+                      STATUS_OK,
+                      hp)
+from hpsklearn import (HyperoptGridSearchCV,
+                      HyperoptRandomizedSearchCV, 
+                      HyperoptTune,
+                      HyperoptEstimator
+                      )
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import optuna
+
+
+def bymodel_search_space(model):
+    if model == "Random Forest":
+        return {
+            "n_estimators": [100, 200, 300],
+            "max_depth": [None, 10, 20, 30],
+            "min_samples_split": [2, 5, 10],
+            "min_samples_leaf": [1, 2, 4]
+        }
+    elif model == "XGBoost":
+        return {
+            "n_estimators": [100, 200, 300],
+            "max_depth": [None, 10, 20, 30],
+            "min_samples_split": [2, 5, 10],
+            "min_samples_leaf": [1, 2, 4]
+        }
+    elif model == "LGBM":
+        return {
+            "n_estimators": [100, 200, 300],
+            "max_depth": [None, 10, 20, 30],
+            "min_samples_split": [2, 5, 10],
+            "min_samples_leaf": [1, 2, 4]
+        }
+    elif model == "CatBoost":
+        return {
+            "n_estimators": [100, 200, 300],
+            "max_depth": [None, 10, 20, 30],
+            "min_samples_split": [2, 5, 10],
+            "min_samples_leaf": [1, 2, 4]
+        }
+    
+    elif model == "QuadraticDiscriminantAnalysis":
+        return {
+            "reg_param": [0.1, 0.5, 1.0]
+        }
+    elif model == "SVC_linear":
+        return {
+            "C": [0.025, 0.1, 0.5]
+        }
+    elif model == "SVC_rfb":
+        return {
+            "gamma": [2, 5, 10]
+        }
+    elif model == "Gaussian_Process_Classifier":
+        return {
+            "alpha": [0.1, 0.5, 1.0]
+        }
+    elif model == "MLP_Classifier":
+        return {
+            "alpha": [0.1, 0.5, 1.0]
+        }
+    elif model == "GaussianNB":
+        return {
+            "alpha": [0.1, 0.5, 1.0]
+        }
+    elif model == "QuadraticDiscriminantAnalysis":
+        return {
+            "reg_param": [0.1, 0.5, 1.0]
+        }
+
+
+
+
+
+
+
 
 
 
@@ -49,7 +126,25 @@ class HyperparamTuning:
                 rs_classifier.best_score_
             )
 
+#-----------------------------------------------------------------------------------------
+with mlflow.start_run(run_name="gridsearch") as run:
+    
+    # Espacio de busqueda
+    gridsearch_params = {
+        "loss": ("log_loss", "exponential"),
+        "learning_rate": [0.1,  0.5],
+        "n_estimators": [10, 100]
+    }
+    
+    optimizer = AIOptimizer(
+        opt_strategy="grid_search",
+        search_space=gridsearch_params,
+        algorithm=classifier
+    )
+    _, params, score = optimizer.optimize()
 
+    mlflow.log_metric("accuracy", score)
+    mlflow.log_params(params)
 
 #-----------------------------------------------------------------------------------------
     
@@ -111,7 +206,7 @@ class HyperparamTuning:
         mlflow.log_params(best_params)
         
     
-    
+    #-----------------------------------------------------------------------------------------
     
     
     

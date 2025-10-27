@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
-from sklearn.metrics import classification_report
+import datetime
+import mlflow
+from loguru import logger
+from sklearn.metrics import (classification_report,
+                             accuracy_score)
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
@@ -46,8 +50,8 @@ class Processing:
 
                 y_train_pred = model.predict(X_train)
                 y_test_pred = model.predict(X_test)
-                train_model_score = r2_score(y_train, y_train_pred)
-                test_model_score = r2_score(y_test, y_test_pred)
+                train_model_score = accuracy_score(y_train, y_train_pred)
+                test_model_score = accuracy_score(y_test, y_test_pred)
 
                 report[list(models.keys())[i]] = test_model_score
 
@@ -55,7 +59,39 @@ class Processing:
         except Exception as e:
             print(f"Error en evaluate_models: {e}")
             return {}
+        
+        models = {
+            "LogisticRegression": LogisticRegression(**params),
+            "K-Neighbors Classifier": KNeighborsClassifier(**params),
+            "Decision Tree Classifier": DecisionTreeClassifier(**params),
+            "Random Forest Classifier": RandomForestClassifier(**params),
+            "XGBClassifier": XGBClassifier(**params), 
+            "CatBoosting Classifier": CatBoostClassifier(**params),
+            "AdaBoost Classifier": AdaBoostClassifier(**params),
+            "Gradient Boosting": GradientBoostingClassifier(**params),
+            "LGBM": LGBMClassifier(**params)
+            '"SVC_linear": SVC(kernel="linear", C=0.025, random_state=42),'
+            '"SVC_rfb": SVC(gamma=2, C=1, random_state=42),'
+            '"Gaussian_Process_Classifier": GaussianProcessClassifier(1.0 * RBF(1.0), random_state=42)'
+            '"MLP_Classifier": MLPClassifier(alpha=1, max_iter=1000, random_state=42)'
+            '"GaussianNB": GaussianNB()'
+            '"QuadraticDiscriminantAnalysis": QuadraticDiscriminantAnalysis()'
+        }
+        
+        
+        model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
+                                             models=models,param=params)
+        logger.info("Reporte de Clasificación")
+        cls_report = classification_report(y_true = y_true, y_pred = y_pred, digits = 4, output_dict = True)
+        print(cls_report)
+        report_dataframe_artifact = pd.DataFrame(report)
+        
+        
+        run_name = f"{self.pipeline_process_name}_{self.current_date_experiment}_{self.current_time_experiment}"
+        model = self.algoritmo_process(**self.hyperparams)
+       
     
+
     def run_process(self, X_train, y_train, X_test, y_test, params):
 
         self.logger.info("Inicializando proceso del modelo...")
@@ -65,35 +101,12 @@ class Processing:
         mlflow.set_experiment(f"{name_exp}_DSRP_mle3")
         mlflow.create_experiment(f"{name_exp}_DSRP_mle3")
 
-
-
-
-        models = {
-            "LogisticRegression": LogisticRegression(**params),
-            "K-Neighbors Classifier": KNeighborsClassifier(**params),
-            "Decision Tree Classifier": DecisionTreeClassifier(**params),
-            "Random Forest Classifier": RandomForestClassifier(**params),
-            "XGBClassifier": XGBClassifier(**params), 
-            "CatBoosting Regressor": CatBoostClassifier(**params),
-            "AdaBoost Classifier": AdaBoostClassifier(**params),
-            "Gradient Boosting": GradientBoostingClassifier(**params),
-            "LGBM": LGBMClassifier(**params)
-            
-        }
         
-        
-        model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
-                                             models=models,param=params)
-        logger.info("Reporte de Clasificación")
-        print(classification_report(y_true = y_true, y_pred = y_pred, digits = 4, output_dict = True))
-        report_dataframe_artifact = pd.DataFrame(report)
-        
-        
-        run_name = f"{self.pipeline_process_name}_{self.current_date_experiment}_{self.current_time_experiment}"
-        model = self.algoritmo_process(**self.hyperparams)
-       
+        model_train.evaluate_models(self.X_train, self.y_train, self.X_test, self.y_test)
 
 
+
+        mlflow.log
         mlflow.autolog(log_models=True)
         with mlflow.start_run(run_name=run_name):
           
