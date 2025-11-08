@@ -1,7 +1,7 @@
 [project]
-name = "mle2"
+name = "mle3"
 version = "0.0.0"
-description = "Proyecto mle2 dsrp"
+description = "Proyecto mle3 dsrp"
 authors = [
     {name = "Marquinhos",email = "pradovasquezm@gmail.com"}
 ]
@@ -14,7 +14,7 @@ dependencies = [
     "lightgbm (>=4.6.0,<5.0.0)",
     "catboost (>=1.2.8,<2.0.0)",
     "optuna (>=4.4.0,<5.0.0)",
-    "shap (>=0.48.0,<0.49.0)",
+    "shap>=0.48.0,<0.49.0",
     "plotly (>=6.2.0,<7.0.0)",
     "fastapi (>=0.116.1,<0.117.0)",
     "uvicorn (==0.34.0)",
@@ -38,6 +38,7 @@ dependencies = [
     "evidently>=0.5.0",
     "logger>=1.4",
     "cookiecutter>=2.6.0",
+    "lime>=0.2.0.1",
 ]
 
 
