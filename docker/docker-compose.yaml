@@ -10,4 +10,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana-data:/var/lib/grafana
-    
+
+volumes:
+  grafana-data:
+    driver: local
