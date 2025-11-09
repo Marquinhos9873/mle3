@@ -1,3 +1,6 @@
+
+
+
 from hyperopt import (fmin,
                       tpe,
                       space_eval,
@@ -11,6 +14,8 @@ from hpsklearn import (HyperoptGridSearchCV,
                       )
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import optuna
+
+
 
 
 def bymodel_search_space(model):
@@ -71,13 +76,6 @@ def bymodel_search_space(model):
         return {
             "reg_param": [0.1, 0.5, 1.0]
         }
-
-
-
-
-
-
-
 
 
 

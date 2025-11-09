@@ -3,11 +3,18 @@ import numpy as np
 import datetime
 import mlflow
 from loguru import logger
+from sklearn.inspection import permutation_importance, PartialDependenceDisplay
 from sklearn.metrics import (classification_report,
                              accuracy_score)
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
+from sklearn.svm import SVC
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import (  GradientBoostingClassifier,
                                 StackingClassifier,
@@ -15,10 +22,15 @@ from sklearn.ensemble import (  GradientBoostingClassifier,
                                 DecisionTreeClassifier,
                                 RandomForestClassifier, 
                                 VotingClassifier,
-                                AdaBoost        )
-import hyperparams
-import reescalador
+                                AdaBoostClassifier)
+from interpret.glassbox import ExplainableBoostingClassifier
 
+from interpret import show
+
+
+import hyperparams as hyperparams
+import reescalador as sca
+import interpretabilidad as interpretabilidad
 
 class Processing:
     
@@ -60,6 +72,12 @@ class Processing:
             print(f"Error en evaluate_models: {e}")
             return {}
         
+        params = bymodel_search_space(model=self.algoritmo_process)
+        return params
+
+            
+
+    def define_models(self, params):
         models = {
             "LogisticRegression": LogisticRegression(**params),
             "K-Neighbors Classifier": KNeighborsClassifier(**params),
@@ -69,13 +87,13 @@ class Processing:
             "CatBoosting Classifier": CatBoostClassifier(**params),
             "AdaBoost Classifier": AdaBoostClassifier(**params),
             "Gradient Boosting": GradientBoostingClassifier(**params),
-            "LGBM": LGBMClassifier(**params)
-            '"SVC_linear": SVC(kernel="linear", C=0.025, random_state=42),'
-            '"SVC_rfb": SVC(gamma=2, C=1, random_state=42),'
-            '"Gaussian_Process_Classifier": GaussianProcessClassifier(1.0 * RBF(1.0), random_state=42)'
-            '"MLP_Classifier": MLPClassifier(alpha=1, max_iter=1000, random_state=42)'
-            '"GaussianNB": GaussianNB()'
-            '"QuadraticDiscriminantAnalysis": QuadraticDiscriminantAnalysis()'
+            "LGBM": LGBMClassifier(**params),
+            "SVC_linear": SVC(**params),
+            "SVC_rfb": SVC(**params),
+            "Gaussian_Process_Classifier": GaussianProcessClassifier(**params),
+            "MLP_Classifier": MLPClassifier(**params),
+            "GaussianNB": GaussianNB(**params),
+            "QuadraticDiscriminantAnalysis": QuadraticDiscriminantAnalysis(**params)
         }
         
         
@@ -100,10 +118,16 @@ class Processing:
         mlflow.set_tracking_uri(f'{self.dagshub_repo_url}')
         mlflow.set_experiment(f"{name_exp}_DSRP_mle3")
         mlflow.create_experiment(f"{name_exp}_DSRP_mle3")
+        ### Interpretability interpret
+
+
+        ###Evidently 
 
         
         model_train.evaluate_models(self.X_train, self.y_train, self.X_test, self.y_test)
-
+        main_pipeline = Pipeline(
+            steps = ((      ),
+        )
 
 
         mlflow.log
