@@ -46,6 +46,43 @@ class Processing:
         self.current_time_experiment = datetime.datetime.now().strftime("%H%M%S")
 
 
+        
+
+    def run_process(self, X_train, y_train, X_test, y_test, params):
+
+        self.logger.info("Inicializando proceso del modelo...")
+        self.logger.info(f"Tracking: {self.dagshub_repo_url}")
+        self.logger.info(f'Experimento seteado como: {name_exp}_DSRP_mle3')
+        mlflow.set_tracking_uri(f'{self.dagshub_repo_url}')
+        mlflow.set_experiment(f"{name_exp}_DSRP_mle3")
+        mlflow.create_experiment(f"{name_exp}_DSRP_mle3")
+        
+        X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+        ### Interpretability interpret
+        ###Evidently 
+
+        
+        model_train.evaluate_models(self.X_train, self.y_train, self.X_test, self.y_test)
+        main_pipeline = Pipeline(
+            steps = ((      ),
+        )
+
+
+        mlflow.log
+        mlflow.autolog(log_models=True)
+        with mlflow.start_run(run_name=run_name):
+
+
+
+
+
+
+
+
+
+
+
+    
 
     def evaluate_models(X_train, y_train,X_test,y_test,models):
         try:
@@ -111,29 +148,7 @@ class Processing:
        
     
 
-    def run_process(self, X_train, y_train, X_test, y_test, params):
 
-        self.logger.info("Inicializando proceso del modelo...")
-        self.logger.info(f"Tracking: {self.dagshub_repo_url}")
-        self.logger.info(f'Experimento seteado como: {name_exp}_DSRP_mle3')
-        mlflow.set_tracking_uri(f'{self.dagshub_repo_url}')
-        mlflow.set_experiment(f"{name_exp}_DSRP_mle3")
-        mlflow.create_experiment(f"{name_exp}_DSRP_mle3")
-        ### Interpretability interpret
-
-
-        ###Evidently 
-
-        
-        model_train.evaluate_models(self.X_train, self.y_train, self.X_test, self.y_test)
-        main_pipeline = Pipeline(
-            steps = ((      ),
-        )
-
-
-        mlflow.log
-        mlflow.autolog(log_models=True)
-        with mlflow.start_run(run_name=run_name):
           
 
 

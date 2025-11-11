@@ -51,3 +51,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 cookiecutter = "^2.6.0"
 
+[tool.uv.workspace]
+members = [
+    "docker",
+]
+
