@@ -1,6 +1,3 @@
-
-
-
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -8,7 +5,7 @@ from sklearn.decomposition import PCA
 
 
 
-class Scaler_process:
+class scaler_process:
     def __init__(self, data: pd.DataFrame, scale_method: "method", pipeline_name: str):
         self.scale_method = scale_method
         self.data = data

@@ -16,73 +16,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import optuna
 
 
-
-
-def bymodel_search_space(model):
-    if model == "Random Forest":
-        return {
-            "n_estimators": [100, 200, 300],
-            "max_depth": [None, 10, 20, 30],
-            "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [1, 2, 4]
-        }
-    elif model == "XGBoost":
-        return {
-            "n_estimators": [100, 200, 300],
-            "max_depth": [None, 10, 20, 30],
-            "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [1, 2, 4]
-        }
-    elif model == "LGBM":
-        return {
-            "n_estimators": [100, 200, 300],
-            "max_depth": [None, 10, 20, 30],
-            "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [1, 2, 4]
-        }
-    elif model == "CatBoost":
-        return {
-            "n_estimators": [100, 200, 300],
-            "max_depth": [None, 10, 20, 30],
-            "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [1, 2, 4]
-        }
-    
-    elif model == "QuadraticDiscriminantAnalysis":
-        return {
-            "reg_param": [0.1, 0.5, 1.0]
-        }
-    elif model == "SVC_linear":
-        return {
-            "C": [0.025, 0.1, 0.5]
-        }
-    elif model == "SVC_rfb":
-        return {
-            "gamma": [2, 5, 10]
-        }
-    elif model == "Gaussian_Process_Classifier":
-        return {
-            "alpha": [0.1, 0.5, 1.0]
-        }
-    elif model == "MLP_Classifier":
-        return {
-            "alpha": [0.1, 0.5, 1.0]
-        }
-    elif model == "GaussianNB":
-        return {
-            "alpha": [0.1, 0.5, 1.0]
-        }
-    elif model == "QuadraticDiscriminantAnalysis":
-        return {
-            "reg_param": [0.1, 0.5, 1.0]
-        }
-
-
-
-
-
-
-
+#-----------------------------------------------------------------------------------------
 class HyperparamTuning:
  
     def __init__(self, opt_strategy: str, search_space, algorithm ) -> None:
@@ -96,7 +30,7 @@ class HyperparamTuning:
             gs_classifier = GridSearchCV(
                 estimator=self.algorithm, 
                 param_grid=self.search_space, 
-                cv=3,
+                cv=2,
                 scoring="accuracy"
             )
             gs_classifier.fit(X_train_clf, y_train_clf)
@@ -111,7 +45,7 @@ class HyperparamTuning:
             rs_classifier = RandomizedSearchCV(
                 estimator=self.algorithm, 
                 param_distributions=self.search_space, 
-                cv=3,
+                cv=2,
                 scoring="accuracy",
                 n_iter=5
             )
