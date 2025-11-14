@@ -110,7 +110,10 @@ class Processing:
 
         params={
                 "Decision Tree": {
+                    'criterion': ['gini','log_loss'],
+                    'max_depth': [0, 10, 12, 16],
                     
+                
                 },
 
                 "Random Forest":{
@@ -123,7 +126,7 @@ class Processing:
                 
                 "XGBClassifier":{
                     'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
-                    'max_depth': [5, 6, 7]
+                    'max_depth': [5, 6, 7],
                     'n_estimators': [256, 128, 64, 12],
                     'tree_method': ['auto', 'approx']
                 },
@@ -137,7 +140,7 @@ class Processing:
                 }
                 
             }
-            
+
         ### 'learning_rate': np.logspace(-3, -0.4, 15) , log distribución de valores, probar
 
 
@@ -162,22 +165,8 @@ class Processing:
         
         run_name = f"{self.pipeline_process_name}_{self.current_date_experiment}_{self.current_time_experiment}"
         model = self.algoritmo_process(**self.hyperparams)
-       
+        return None
     
-
-
-          
-
-
-
-            
-
-
-
-
-        
-        return 
-        pass
 
 
     ''' CUDA toolkit (2.3gb aaaa) 

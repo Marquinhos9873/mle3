@@ -1,3 +1,5 @@
+# Ignore data CSV files
+data/*.csv
 
 
 # Mac OS-specific storage files
