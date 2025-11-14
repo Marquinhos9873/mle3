@@ -1,41 +1,44 @@
+import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
-
 class scaler_process:
-    def __init__(self, data: pd.DataFrame, scale_method: "method", pipeline_name: str):
+    def __init__(self, data: pd.DataFrame, scale_method: StandardScaler, pipeline_name: str):
         self.scale_method = scale_method
         self.data = data
         self.pca = PCA(n_components=2)
         self.pipeline_name = pipeline_name
-        self.explained_variance = self.pca.explained_variance_ratio_
+        self.explained_variance = None
 
-    def run_scaler():
-        
+    def run_scaler(self):
         scaler_pipeline = Pipeline(
-            steps = [
+            steps=[
                 ("scaler", self.scale_method),
-                ("PCA", self.pca),
-                    ]
-            )
-
-        metada = pd.DataFrame(
-            scaler_pipeline.fit_transform(self.data),
-            columns =  [f"{self.pipeline_name}_feat_{i+1}" for i in range(self.n_components)]
+                ("pca", self.pca),
+            ]
         )
-        
-        
+
+        transformed = scaler_pipeline.fit_transform(self.data)
+        self.explained_variance = self.pca.explained_variance_ratio_
+        metadata = pd.DataFrame(
+            transformed,
+            columns=[f"{self.pipeline_name}_feat_{i+1}" for i in range(self.pca.n_components_)]
+        )
+
         return scaler_pipeline, metadata
 
 #### sacler_table = scaler(data = no_gender_data, scale_method = StandarScaler(); MacxMinScaler(), RobustScaler(), pipeli)
 
     def plot_variance(self):
-            plt.plot(range(1, len(self.explained_variance)+1), self.explained_variance, marker="o")
-            plt.title("Explained Variance by Components")
-            plt.xlabel("Component")
-            plt.ylabel("Explained Variance Ratio")
-            plt.show()
+        if self.explained_variance is None:
+            raise ValueError("Ejecuta run_scaler() antes de graficar la varianza.")
+
+        plt.plot(range(1, len(self.explained_variance) + 1), self.explained_variance, marker="o")
+        plt.title("Varianza Explicada por Componente")
+        plt.xlabel("Componente")
+        plt.ylabel("Proporción de Varianza Explicada")
+        plt.show()
 ### scaler_table.plot_variance()

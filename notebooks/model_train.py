@@ -26,9 +26,8 @@ import interpretabilidad as inter
 
 class Processing:
     
-    def __init__(self, pipeline_process_name, algoritmo_process, hyperparams, name_exp = None, dagshub_repo_url = None):
+    def __init__(self, algoritmo_process, hyperparams, name_exp = None, dagshub_repo_url = None):
         self.logger.info("Inicializando procesamiento...")
-        self.pipeline_process_name = pipeline_process_name
         self.algoritmo_process = algoritmo_process
         self.hyperparams = hyperparams
         self.name_exp = name_exp or "Default_try_exp"
@@ -39,7 +38,7 @@ class Processing:
 
         
 
-    def run_process(self, X_train, y_train, X_test, y_test, params):
+    def run_process(self, X_train, y_train, X_test, y_test):
 
         self.logger.info("Inicializando proceso del modelo...")
         self.logger.info(f"Tracking: {self.dagshub_repo_url}")
@@ -50,43 +49,11 @@ class Processing:
         
         X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
         
-        
-        model_train.evaluate_models(self.X_train, self.y_train, self.X_test, self.y_test)
-        main_pipeline = Pipeline(
-            steps = [(      ),
-                     (       ),
-                     (       ),
-                     (       ),
-                       
-            ]
-        )
-
-
-
-       
+                  
+      
         mlflow.autolog(log_models=True)
         with mlflow.start_run(run_name=run_name):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 
@@ -106,9 +73,9 @@ class Processing:
                 
 
 
-                ### Integracion de hyperparametros estrategia
-                #gs = GridSearchCV(model,para,cv=3)
-                #gs.fit(X_train,y_train)
+                ###Integracion de hyperparametros estrategia
+                gs = GridSearchCV(model,para,cv=3)
+                gs.fit(X_train,y_train)
 
                 model.set_params(**gs.best_params_)
                 model.fit(X_train,y_train)
@@ -136,48 +103,44 @@ class Processing:
                 "Random Forest": RandomForestClassifier(),
                 "Decision Tree": DecisionTreeClassifier(),
                 "Gradient Boosting": GradientBoostingClassifier(),
-                "XGBClassifier": XGBClassifier(),
-                "CatBoosting Classifier": CatBoostClassifier(),
+                "XGBClassifier": XGBClassifier(device ='cuda', verbosity = '1', ),
+                "CatBoosting Classifier": CatBoostClassifier(task_type='GPU', devices='0', early_stopping_rounds = 50),
                 "AdaBoost Classifier": AdaBoostClassifier(),
             }
 
         params={
                 "Decision Tree": {
-                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                    'splitter':['best','random'],
-                    'max_features':['sqrt','log2'],
+                    
                 },
+
                 "Random Forest":{
-                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                                     'max_features':['sqrt','log2',None],
-                    'n_estimators': [8,16,32,64,128,256]
+                    
                 },
+
                 "Gradient Boosting":{
-                    'loss':['squared_error', 'huber', 'absolute_error', 'quantile'],
-                    'learning_rate':[.1,.01,.05,.001],
-                    'subsample':[0.6,0.7,0.75,0.8,0.85,0.9],
-                    'criterion':['squared_error', 'friedman_mse'],
-                    'max_features':['auto','sqrt','log2'],
-                    'n_estimators': [8,16,32,64,128,256]
+                    
                 },
-                "Linear Regression":{},
-                "XGBRegressor":{
-                    'learning_rate':[.1,.01,.05,.001],
-                    'n_estimators': [8,16,32,64,128,256]
+                
+                "XGBClassifier":{
+                    'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
+                    'max_depth': [5, 6, 7]
+                    'n_estimators': [256, 128, 64, 12],
+                    'tree_method': ['auto', 'approx']
                 },
-                "CatBoosting Regressor":{
-                    'depth': [6,8,10],
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'iterations': [30, 50, 100]
+
+                "CatBoosting Classifier":{
+                    
                 },
-                "AdaBoost Regressor":{
-                    'learning_rate':[.1,.01,0.5,.001],
-                    'loss':['linear','square','exponential'],
-                    'n_estimators': [8,16,32,64,128,256]
+
+                "AdaBoost Classifier":{
+                    
                 }
                 
             }
-        
+            
+        ### 'learning_rate': np.logspace(-3, -0.4, 15) , log distribución de valores, probar
+
+
         model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
                                              models=models,param=params)
         
@@ -215,3 +178,19 @@ class Processing:
         
         return 
         pass
+
+
+    ''' CUDA toolkit (2.3gb aaaa) 
+    def interpretability():
+        if model == "XGBoostClassifier":
+
+            explainer = shap.explainers.GPUTree(model, X)
+            shap_values = explainer(X)
+            barplot_shap = shap.plots.bar(shap_values)
+            waterfall_plot_shap = shap.plots.waterfall(shap_values[0])
+
+        return barplot_shap, waterfall_plot_shap
+        
+        mlflow.log_article(barplot_shap)
+        mlflow.log_article(waterfall_plot_shap)
+    '''
