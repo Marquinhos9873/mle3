@@ -5,7 +5,9 @@ import mlflow
 from loguru import logger
 from sklearn.inspection import permutation_importance, PartialDependenceDisplay
 from sklearn.metrics import (classification_report,
-                             accuracy_score)
+                            confusion_matrix,
+                            ConfusionMatrixDisplay,
+                            accuracy_score)
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
@@ -18,18 +20,15 @@ from sklearn.ensemble import (  GradientBoostingClassifier,
 
 from interpret import show
 
-
-
 import hyperparams as hparams
-import reescalador as rescaler
 import interpretabilidad as inter
 
 class Processing:
     
-    def __init__(self, algoritmo_process, hyperparams, name_exp = None, dagshub_repo_url = None):
+    def __init__(self, algoritmo_process, hiperparams, name_exp = None, dagshub_repo_url = None):
         self.logger.info("Inicializando procesamiento...")
         self.algoritmo_process = algoritmo_process
-        self.hyperparams = hyperparams
+        self.hiperparams = hiperparams
         self.name_exp = name_exp or "Default_try_exp"
         self.dagshub_repo_url = dagshub_repo_url
         self.current_date_experiment = datetime.date.today().strftime("%Y%m%d")
@@ -46,14 +45,19 @@ class Processing:
         mlflow.set_tracking_uri(f'{self.dagshub_repo_url}')
         mlflow.set_experiment(f"{name_exp}_DSRP_mle3")
         mlflow.create_experiment(f"{name_exp}_DSRP_mle3")
-        
+        run_name = f"{self.current_date_experiment}_{self.current_time_experiment}"
         X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
         
                   
       
         mlflow.autolog(log_models=True)
         with mlflow.start_run(run_name=run_name):
-        
+        pipeline_process = Pipeline([
+            ("scaler", self.scale_method),
+            (   ,  ),
+            (   ,  )
+            ])
+       
 
 
 
@@ -63,65 +67,40 @@ class Processing:
 
     
 
-    def evaluate_models(X_train, y_train, X_test, y_test, models):
-        try:
-            report = {}
-
-            for i in range(len(list(models))):
-                model = list(models.values())[i]
-                para = params[list(models.keys())[i]]
-                
-
-
-                ###Integracion de hyperparametros estrategia
-                gs = GridSearchCV(model,para,cv=3)
-                gs.fit(X_train,y_train)
-
-                model.set_params(**gs.best_params_)
-                model.fit(X_train,y_train)
-
-                y_train_pred = model.predict(X_train)
-                y_test_pred = model.predict(X_test)
-
-                train_model_score = accuracy_score(y_train, y_train_pred)
-                test_model_score = accuracy_score(y_test, y_test_pred)
-
-                report[list(models.keys())[i]] = test_model_score
-
-            return report
-        
-        except Exception as e:
-            print(f"Error en evaluate_models: {e}")
-            return None
-        
+    
         
             
 
-    def define_models(self, params):
+    def define_models(self):
           
         models = {
-                "Random Forest": RandomForestClassifier(),
-                "Decision Tree": DecisionTreeClassifier(),
-                "Gradient Boosting": GradientBoostingClassifier(),
-                "XGBClassifier": XGBClassifier(device ='cuda', verbosity = '1', ),
-                "CatBoosting Classifier": CatBoostClassifier(task_type='GPU', devices='0', early_stopping_rounds = 50),
-                "AdaBoost Classifier": AdaBoostClassifier(),
+                "Random Forest": RandomForestClassifier( verbose = 1, **params),
+                "Decision Tree": DecisionTreeClassifier(**params),
+                "Gradient Boosting": GradientBoostingClassifier( verbose = 1, **params),
+                "XGBClassifier": XGBClassifier(device ='cuda', verbosity = '1', **params),
+                "CatBoosting Classifier": CatBoostClassifier(task_type='GPU', devices='0', early_stopping_rounds = 50)
             }
 
         params={
                 "Decision Tree": {
                     'criterion': ['gini','log_loss'],
                     'max_depth': [0, 10, 12, 16],
-                    
-                
+                    'min_samples_split':[2, 3, 4, 5],
+                                   
                 },
 
                 "Random Forest":{
-                    
+                    'n_estimators' : [110 , 115, 125, 130],
+                    'criterion' : ['gini' ,'log_loss', 'entropy'],
+                    'max_depth' : [None, 5, 7 , 8],
+
                 },
 
                 "Gradient Boosting":{
-                    
+                    'n_estimators' : [110 , 115, 125, 130],
+                    'max_depth' : [None, 5, 7 , 8],
+                    'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
+                    'min_samples_split':[2, 3, 4, 5],
                 },
                 
                 "XGBClassifier":{
@@ -132,11 +111,11 @@ class Processing:
                 },
 
                 "CatBoosting Classifier":{
-                    
-                },
-
-                "AdaBoost Classifier":{
-                    
+                    'iterations': [200, 400, 800],
+                    'learning_rate': [0.001, 0.01, 0.05, 0.1],
+                    'depth': [3, 4, 6, 8, 10],
+                    'l2_leaf_reg': [1, 3, 5, 7, 9],
+                    'bootstrap_type': ['Bayesian', 'Bernoulli', 'MVS']
                 }
                 
             }
@@ -155,18 +134,81 @@ class Processing:
             ]
 
         best_model = models[best_model_name]
+        mlflow.log_artifact(confmat)
+        mlflow.log_artifact(disp)
+        mlflow.log_artifact(best_model)
+        mlflow.log_metrics(f'{best_model_name}': best_model_score)
 
 
-        logger.info("Reporte de Clasificación")
-        cls_report = classification_report(y_true = y_true, y_pred = y_pred, digits = 4, output_dict = True)
+        logger.info("Reporte de Clasificación en proceso")
+        cls_report = classification_report(y_true = y_train, y_pred = y_pred, digits = 4, output_dict = True)
         print(cls_report)
-        report_dataframe_artifact = pd.DataFrame(report)
+        confmat = confusion_matrix(y_true = y_true, y_pred = y_pred)
+        disp = ConfusionMatrixDisplay(confusion_matrix = confmat)
+        disp.plot()
+        plt.show()
         
-        
-        run_name = f"{self.pipeline_process_name}_{self.current_date_experiment}_{self.current_time_experiment}"
-        model = self.algoritmo_process(**self.hyperparams)
-        return None
+
+
+        return models, params, best_model_name, best_model_score
     
+    
+    def evaluate_models(X_train, y_train, X_test, y_test, models, params, opt_strategy):
+        try:
+            report = {}
+
+            for i in range(len(list(models))):
+                model = list(models.values())[i]
+                para = params[list(models.keys())[i]]
+                
+
+
+                ###Integracion de soft hp tuning para reporte de resultados
+
+                gs_opt = AIOptimizer(opt_strategy="grid_search", search_space=para, algorithm=model)
+                rs_opt = AIOptimizer(opt_strategy="random_search", search_space=para, algorithm=model)
+                gs_opt.optimize()
+                rs_opt.optimize()
+                grid_model = gs_opt.best_estimator_
+                random_model = rs_opt.best_estimator_
+                grid_model.fit(X_train,y_train)
+                random_model.fit(X_train,y_train)
+                
+                
+
+                grid_model = model.set_params(**gs.best_params_)
+                random_model = model.set_params(**rs.best_params_)
+                grid_model.fit(X_train,y_train)
+                random_model.fit(X_train,y_train)
+
+                y_train_pred = grid_model.predict(X_train)
+                y_train_pred_random = random_model.predict(X_train)
+                y_test_pred = grid_model.predict(X_test)
+                y_test_pred_random = random_model.predict(X_test)
+
+                train_model_score = accuracy_score(y_train, y_train_pred)
+                test_model_score = accuracy_score(y_test, y_test_pred)
+
+                report[list(models.keys())[i]] = test_model_score
+
+            
+        except Exception as e:
+            print(f"Error en evaluate_models: {e}")
+            return None
+
+        return report   
+
+
+    
+
+
+
+
+
+
+
+
+
 
 
     ''' CUDA toolkit (2.3gb aaaa) 
