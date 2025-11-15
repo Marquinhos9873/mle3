@@ -3,7 +3,10 @@ import numpy as np
 import datetime
 import mlflow
 from loguru import logger
+from sklearn.base
 from sklearn.inspection import permutation_importance, PartialDependenceDisplay
+from sklearn
+from sklearn.compose import ColumnTransformer
 from sklearn.metrics import (classification_report,
                             confusion_matrix,
                             ConfusionMatrixDisplay,
@@ -14,8 +17,7 @@ from catboost import CatBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import (  GradientBoostingClassifier,
                                 DecisionTreeClassifier,
-                                RandomForestClassifier, 
-                                AdaBoostClassifier)
+                                RandomForestClassifier)
 
 
 from interpret import show
@@ -37,7 +39,7 @@ class Processing:
 
         
 
-    def run_process(self, X_train, y_train, X_test, y_test):
+    def starting_process(self, X, y):
 
         self.logger.info("Inicializando proceso del modelo...")
         self.logger.info(f"Tracking: {self.dagshub_repo_url}")
@@ -46,32 +48,22 @@ class Processing:
         mlflow.set_experiment(f"{name_exp}_DSRP_mle3")
         mlflow.create_experiment(f"{name_exp}_DSRP_mle3")
         run_name = f"{self.current_date_experiment}_{self.current_time_experiment}"
-        X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         
                   
       
         mlflow.autolog(log_models=True)
         with mlflow.start_run(run_name=run_name):
         pipeline_process = Pipeline([
-            ("scaler", self.scale_method),
-            (   ,  ),
-            (   ,  )
+            ( , ),
+            ( ,  ),
+            (  ,  )
             ])
        
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-    
-
-    
-        
-            
-
-    def define_models(self):
           
         models = {
                 "Random Forest": RandomForestClassifier( verbose = 1, **params),
@@ -120,12 +112,19 @@ class Processing:
                 
             }
 
-        ### 'learning_rate': np.logspace(-3, -0.4, 15) , log distribución de valores, probar
+
+    
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+        
+            
+
+    def define_models(self, models, params):
+
 
 
         model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
                                              models=models,param=params)
-        
         
         best_model_score = max(sorted(model_report.values()))
 
@@ -141,9 +140,9 @@ class Processing:
 
 
         logger.info("Reporte de Clasificación en proceso")
-        cls_report = classification_report(y_true = y_train, y_pred = y_pred, digits = 4, output_dict = True)
+        cls_report = classification_report(y_true = y_test, y_pred = y_pred, digits = 4, output_dict = True)
         print(cls_report)
-        confmat = confusion_matrix(y_true = y_true, y_pred = y_pred)
+        confmat = confusion_matrix(y_true = y_test, y_pred = y_pred)
         disp = ConfusionMatrixDisplay(confusion_matrix = confmat)
         disp.plot()
         plt.show()
@@ -151,12 +150,16 @@ class Processing:
 
 
         return models, params, best_model_name, best_model_score
+
+
     
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     
     def evaluate_models(X_train, y_train, X_test, y_test, models, params, opt_strategy):
         try:
             
-            if model not in list(models.keys()):
+            if model not in list(models.values()):
                 raise ValueError(f"Model {model} not found in models")
             else:
                 pass
@@ -177,17 +180,10 @@ class Processing:
                 rs_opt = AIOptimizer(opt_strategy="random_search", search_space=para, algorithm=model)
                 gs_opt.optimize()
                 rs_opt.optimize()
-                grid_model = gs_opt.best_estimator_
-                random_model = rs_opt.best_estimator_
-                grid_model.fit(X_train,y_train)
-                random_model.fit(X_train,y_train)
                 
                 
 
-                grid_model = model.set_params(**gs.best_params_)
-                random_model = model.set_params(**rs.best_params_)
-                grid_model.fit(X_train,y_train)
-                random_model.fit(X_train,y_train)
+                
 
                 y_train_pred = grid_model.predict(X_train)
                 y_train_pred_random = random_model.predict(X_train)
