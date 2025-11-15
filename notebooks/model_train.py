@@ -155,6 +155,14 @@ class Processing:
     
     def evaluate_models(X_train, y_train, X_test, y_test, models, params, opt_strategy):
         try:
+            
+            if model not in list(models.keys()):
+                raise ValueError(f"Model {model} not found in models")
+            else:
+                pass
+
+
+
             report = {}
 
             for i in range(len(list(models))):
@@ -208,20 +216,3 @@ class Processing:
 
 
 
-
-
-
-    ''' CUDA toolkit (2.3gb aaaa) 
-    def interpretability():
-        if model == "XGBoostClassifier":
-
-            explainer = shap.explainers.GPUTree(model, X)
-            shap_values = explainer(X)
-            barplot_shap = shap.plots.bar(shap_values)
-            waterfall_plot_shap = shap.plots.waterfall(shap_values[0])
-
-        return barplot_shap, waterfall_plot_shap
-        
-        mlflow.log_article(barplot_shap)
-        mlflow.log_article(waterfall_plot_shap)
-    '''

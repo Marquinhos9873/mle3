@@ -24,7 +24,6 @@ dependencies = [
     "tqdm (>=4.67.1,<5.0.0)",
     "joblib (>=1.5.1,<2.0.0)",
     "dagshub (>=0.6.2,<0.7.0)",
-    "mlflow (<3)",
     "feast (==0.51.0)",
     "prophet (>=1.1.7,<2.0.0)",
     "umap (>=0.1.1,<0.2.0)",
@@ -41,6 +40,7 @@ dependencies = [
     "lime>=0.2.0.1",
     "interpret>=0.7.3",
     "fairlearn>=0.13.0",
+    "mlflow==3.0.0",
 ]
 
 
@@ -53,6 +53,6 @@ cookiecutter = "^2.6.0"
 
 [tool.uv.workspace]
 members = [
-    "docker",
+    "docker_service",
 ]
 
