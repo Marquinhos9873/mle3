@@ -74,37 +74,37 @@ class HyperparamTuning:
 
 
     
-'''   
- 
-        with mlflow.start_run(run_name="tpe_hyperopt") as run:
-     
-    
-        trials = Trials()
-        best   = fmin(
-            fn=objective,
-            space=tpe_search_space,
-            algo=tpe.suggest,
-            max_evals=10,
-            trials=trials,
-        )
-    
-        best_params = space_eval(tpe_search_space, best)
-        best_params = {
-                 "loss": best_params["loss"] ,
-                "learning_rate": best_params["learning_rate"],
-                "n_estimators": int(best_params["n_estimators"]),
-                "min_samples_split": int(best_params["min_samples_split"]),
-                "max_depth": int(best_params["max_depth"])
-            }
-        
-        classifier = GradientBoostingClassifier(**best_params)
-        classifier.fit(X_train_clf, y_train_clf)
-        predictions = classifier.predict(X_test_clf)
-        logger.info(f"Best Model accuracy {accuracy_score(y_test_clf, predictions)}")
-    
-        mlflow.log_metric("accuracy", accuracy_score(y_test_clf, predictions))
-        mlflow.log_params(best_params)
-        
+'''
+
+with mlflow.start_run(run_name="tpe_hyperopt") as run:
+
+trials = Trials()
+best   = fmin(
+    fn=objective,
+    space=tpe_search_space,
+    algo=tpe.suggest,
+    max_evals=10,
+    trials=trials,
+)
+
+best_params = space_eval(tpe_search_space, best)
+best_params = {
+         "loss": best_params["loss"] ,
+        "learning_rate": best_params["learning_rate"],
+        "n_estimators": int(best_params["n_estimators"]),
+        "min_samples_split": int(best_params["min_samples_split"]),
+        "max_depth": int(best_params["max_depth"])
+    }
+
+classifier = GradientBoostingClassifier(**best_params)
+classifier.fit(X_train_clf, y_train_clf)
+predictions = classifier.predict(X_test_clf)
+logger.info(f"Best Model accuracy {accuracy_score(y_test_clf, predictions)}")
+
+mlflow.log_metric("accuracy", accuracy_score(y_test_clf, predictions))
+mlflow.log_params(best_params)
+
+
 '''
 
 #-----------------------------------------------------------------------------------------
