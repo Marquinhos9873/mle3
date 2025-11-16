@@ -192,17 +192,22 @@ class xgbopt:
         "min_child_weight": trial.suggest_int("min_child_weight", 1, 10),
         "gamma": trial.suggest_float("gamma", 0, 5),
         }
-        if GPU_use == 1:
-                        model = xgb.XGBClassifier(
-                **params,
-                device = "cuda"
-            )
-        elif GPU_use == 0:
-            model = xgb.XGBClassifier(
-                **params,
-            )
-        else:
-            except Exception as e:
+        try:
+            if GPU_use == 1:
+                model = xgb.XGBClassifier(
+                    **params,
+                    device="cuda"
+                )
+        
+            elif GPU_use == 0:
+                model = xgb.XGBClassifier(
+                    **params
+                )
+        
+            else:
+                raise ValueError("GPU_use debe ser 0 o 1")
+        
+        except Exception as e:
             print(f"Error en evaluate_models: {e}")
             return None
 
