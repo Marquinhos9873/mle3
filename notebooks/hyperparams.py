@@ -216,14 +216,13 @@ class xgbopt:
         mlflow.log_artifac("cross_val_score XBGCcuda", score)
         return score        
             
-   def set_opt_study()     
-        study = optuna.create_study(study_name="xgboost_study_cuda", direction="maximize")
-        study.optimize(objective_gpu, n_trials=10, show_progress_bar=True, n_jobs=-1)
+   def set_opt_study(self):
+       study = optuna.create_study(study_name="xgboost_study_cuda", direction="maximize")
+       study.optimize(objective_gpu, n_trials=10, show_progress_bar=True, n_jobs=-1)
         
-        # Retrieve the best parameter values
-        best_params = study.best_params
-        print(f"\nBest parameters: {best_params}")
-
+       best_params = study.best_params
+       print(f"\nBest parameters: {best_params}")
+       ###---- 
 
 
 
