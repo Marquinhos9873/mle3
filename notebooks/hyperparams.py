@@ -182,6 +182,7 @@ class xgbopt:
         self.GPU_use = GPU_use
 
     def tunning(self, trial):
+        
         params = {
         "max_depth": trial.suggest_int("max_depth", 3, 10),
         "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.1),
@@ -192,16 +193,16 @@ class xgbopt:
         "gamma": trial.suggest_float("gamma", 0, 5),
         }
         if GPU_use == 1:
-        model = xgb.XGBClassifier(
-            **params,
-            device = "cuda"
-        )
+                        model = xgb.XGBClassifier(
+                **params,
+                device = "cuda"
+            )
         elif GPU_use == 0:
-        model = xgb.XGBClassifier(
-            **params,
-        )
+            model = xgb.XGBClassifier(
+                **params,
+            )
         else:
-        except Exception as e:
+            except Exception as e:
             print(f"Error en evaluate_models: {e}")
             return None
 
