@@ -16,7 +16,9 @@ from evidently.metrics import ValueDrift, DriftedColumnsCount, MissingValueCount
 
 
 from sklearn.inspection import permutation_importance, PartialDependenceDisplay
-from sklearn
+from sklearn.model_selection import (   GridSearchCV,
+                                        RandomizedSearchCV,
+                                        train_test_split)
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import (classification_report,
                             confusion_matrix,
@@ -28,7 +30,7 @@ from catboost import CatBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import (  GradientBoostingClassifier,
                                 DecisionTreeClassifier,
-                                RandomForestClassifier)
+                                RandomForestClassifier )
 
 
 from interpret import show
@@ -108,7 +110,10 @@ class Processing:
         mlflow.log_artifact(confmat)
         mlflow.log_artifact(disp)
         mlflow.log_artifact(best_model)
-        mlflow.log_metrics(f'{best_model_name}': best_model_score)
+        
+        best_model_indicator = {'{best_model_name}': best_model_score}
+        
+        mlflow.log_artifact(best_model_indicator)
 
 
         logger.info("Reporte de Clasificación en proceso")
@@ -179,54 +184,49 @@ class Processing:
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
           
- models = {
-                "Random Forest": RandomForestClassifier( verbose = 1, **params),
-                "Decision Tree": DecisionTreeClassifier(**params),
-                "Gradient Boosting": GradientBoostingClassifier( verbose = 1, **params),
-                "XGBClassifier": XGBClassifier(device ='cuda', verbosity = '1', **params),
-                "CatBoosting Classifier": CatBoostClassifier(task_type='GPU', devices='0', early_stopping_rounds = 50)
-            }
-
-params={
-                "Decision Tree": {
-                    'criterion': ['gini','log_loss'],
-                    'max_depth': [0, 10, 12, 16],
-                    'min_samples_split':[2, 3, 4, 5],
-                                   
-                },
-
-                "Random Forest":{
-                    'n_estimators' : [110 , 115, 125, 130],
-                    'criterion' : ['gini' ,'log_loss', 'entropy'],
-                    'max_depth' : [None, 5, 7 , 8],
-
-                },
-
-                "Gradient Boosting":{
-                    'n_estimators' : [110 , 115, 125, 130],
-                    'max_depth' : [None, 5, 7 , 8],
-                    'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
-                    'min_samples_split':[2, 3, 4, 5],
-                },
-                
-                "XGBClassifier":{
-                    'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
-                    'max_depth': [5, 6, 7],
-                    'n_estimators': [256, 128, 64, 12],
-                    'tree_method': ['auto', 'approx']
-                },
-
-                "CatBoosting Classifier":{
-                    'iterations': [200, 400, 800],
-                    'learning_rate': [0.001, 0.01, 0.05, 0.1],
-                    'depth': [3, 4, 6, 8, 10],
-                    'l2_leaf_reg': [1, 3, 5, 7, 9],
-                    'bootstrap_type': ['Bayesian', 'Bernoulli', 'MVS']
+    models = {
+        "Random Forest": RandomForestClassifier(verbose=1, **params["Random Forest"]),
+        "Decision Tree": DecisionTreeClassifier(**params["Decision Tree"]),
+        "Gradient Boosting": GradientBoostingClassifier(verbose=1, **params["Gradient Boosting"]),
+        "XGBClassifier": XGBClassifier(device='cuda', verbosity=1, **params["XGBClassifier"]),
+        "CatBoosting Classifier": CatBoostClassifier(task_type='GPU', devices='0', early_stopping_rounds=100, **params["CatBoosting Classifier"])
+    }
+    
+    params={"Decision Tree": {'criterion': ['gini','log_loss'],
+                                'max_depth': [0, 10, 12, 16],
+                                'min_samples_split':[2, 3, 4, 5]},
+    
+            "Random Forest":{'n_estimators' : [110 , 115, 125, 130],
+                                'criterion' : ['gini' ,'log_loss', 'entropy'],
+                                'max_depth' : [None, 5, 7 , 8]},
+    
+                    "Gradient Boosting":{
+                        'n_estimators' : [110 , 115, 125, 130],
+                        'max_depth' : [None, 5, 7 , 8],
+                        'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
+                        'min_samples_split':[2, 3, 4, 5],
+                    },
+                    
+                    "XGBClassifier":{
+                        'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
+                        'max_depth': [5, 6, 7],
+                        'n_estimators': [256, 128, 64, 12],
+                        'tree_method': ['auto', 'approx']
+                    },
+    
+                    "CatBoosting Classifier":{
+                        'iterations': [200, 400, 800],
+                        'learning_rate': [0.001, 0.01, 0.05, 0.1],
+                        'depth': [3, 4, 6, 8, 10],
+                        'l2_leaf_reg': [1, 3, 5, 7, 9],
+                        'bootstrap_type': ['Bayesian', 'Bernoulli', 'MVS']
+                    }
+                    
                 }
-                
-            }
     
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 class Monitoring:
     def __init__(self):
 
