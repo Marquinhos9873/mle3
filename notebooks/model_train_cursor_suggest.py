@@ -102,7 +102,7 @@ def evaluate_models(
     y_test,
     models=None,
     params=None,
-    opt_strategy: str = "grid_search",
+    opt_strategy: str = None,
 ):
     """
     Entrena varios modelos, realiza búsqueda de hiperparámetros sencilla
