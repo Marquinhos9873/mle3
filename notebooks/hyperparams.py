@@ -15,7 +15,7 @@ import optuna
 
 
 
-  tpe_search_space = {
+tpe_search_space = {
         "loss": hp.choice("loss", ["log_loss", "exponential"]) ,
         "learning_rate": hp.normal("learning_rate", 0.1,0.01 ),
         "n_estimators": hp.quniform("n_estimators", 10, 100, 10),
@@ -23,10 +23,6 @@ import optuna
         "max_depth": hp.quniform("max_depth", 3, 20, 1)
     }
     
-
-
-
-
 
 
 
@@ -74,9 +70,6 @@ class HyperparamTuning:
             "loss": 1 - _accuracy,
             "status": STATUS_OK
         }
-
-
-
 
 
 

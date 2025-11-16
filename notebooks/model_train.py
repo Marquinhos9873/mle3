@@ -25,13 +25,11 @@ from sklearn.metrics import (classification_report,
                             confusion_matrix,
                             ConfusionMatrixDisplay,
                             accuracy_score)
-from xgboost import XGBClassifier
 
+from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import (  GradientBoostingClassifier,
-                                DecisionTreeClassifier,
-                                RandomForestClassifier )
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 
 from interpret import show
