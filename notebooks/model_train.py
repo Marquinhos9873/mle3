@@ -26,7 +26,7 @@ from sklearn.metrics import (classification_report,
                             ConfusionMatrixDisplay,
                             accuracy_score)
 from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
+
 from catboost import CatBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import (  GradientBoostingClassifier,
