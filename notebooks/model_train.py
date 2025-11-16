@@ -8,10 +8,11 @@ import lime
 from loguru import logger
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from evidently import Report
-from evidently import DataDefinition
-from evidently import Dataset
-from evidently.metrics import ValueDrift, DriftedColumnsCount, MissingValueCount
+
+
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset, DataQualityPreset, RegressionPreset, ClassificationPreset
+from evidently.metrics import *
 
 
 
