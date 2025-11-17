@@ -1,0 +1,14 @@
+artifact_uri: file:///home/marcoloq/mle2/notebooks/mlruns/0/e44071acc7c44374a60fdb0ad4404edf/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e44071acc7c44374a60fdb0ad4404edf
+run_name: efficient-fish-959
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763350505858
+status: 1
+tags: []
+user_id: marcoloq
