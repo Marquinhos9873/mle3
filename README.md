@@ -1,15 +1,20 @@
-# ⏱️ DSRP-MLE2: Series de Tiempo & Clasificación Supervisada
+# ⏱️ DSRP-MLE3: Clasificación Supervisada
 ![release](https://img.shields.io/badge/release-v1.0.0-blue.svg)
 ![python](https://img.shields.io/badge/Python-3.11.1-blue?logo=python)
 ![editor](https://img.shields.io/badge/Editor-JupyterLab-F37626?logo=jupyter)
 ![framework](https://img.shields.io/badge/Framework-Scikit--learn-orange?logo=scikit-learn)
 ![xgboost](https://img.shields.io/badge/Library-XGBoost-EB5E00?logo=xgboost)
-![statsmodels](https://img.shields.io/badge/Library-Statsmodels-003B57)
-![pmdarima](https://img.shields.io/badge/Library-Pmdarima-7A3E9D)
 ![pandas](https://img.shields.io/badge/Library-Pandas-150458?logo=pandas)
 ![mlflow](https://img.shields.io/badge/Tool-MLflow-0194E2?logo=mlflow)
 ![dagshub](https://img.shields.io/badge/Cloud-DagsHub-FF6F20?logo=github)
 ![feast](https://img.shields.io/badge/FeatureStore-Feast-00A67E?logo=feast)
+![catboost](https://img.shields.io/badge/Library-CatBoost-FFCC00?logo=catboost)
+![lightgbm](https://img.shields.io/badge/Library-LightGBM-4CAF50?logo=leaf)
+![gbc](https://img.shields.io/badge/Model-GradientBoostingClassifier-00B8D9)
+![dtc](https://img.shields.io/badge/Model-DecisionTreeClassifier-795548)
+![rfc](https://img.shields.io/badge/Model-RandomForestClassifier-2E7D32)
+![loguru](https://img.shields.io/badge/Logger-Loguru-0A0F0B)
+![evidently](https://img.shields.io/badge/Monitoring-Evidently-4B44CE)
 
 ---
 
@@ -330,3 +335,4 @@
 --------
 
 >>>>>>> c618bf4 (Primer commit del proyecto mle2)
+
