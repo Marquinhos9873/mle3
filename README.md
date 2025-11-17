@@ -101,28 +101,6 @@
 
 ..... (4 of 26 columns)
 
-### 📌 Dataset: Microsoft Stock Time Series Analysis
-
-| Ítem                      | Detalle                                                                                                  |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Fuente**                | [Página de Kaggle](https://www.kaggle.com/datasets/vijayvvenkitesh/microsoft-stock-time-series-analysis) Autor: Vijay V Venkitesh |
-| **Licencia**              | CC0: dominio público                                                                                     |
-| **Filas utilizadas**      | All                                                                             |
-| **Variable objetivo**     | `Close` – Precio de cierre de la acción de Microsoft                                                     |
-| **Familias de variables** | **Financieras**: Open, High, Low, Close, Volume, Adjusted Close                                          |
-| **Valores faltantes**     | Ninguno reportado                                                                                        |
-| **Unidades**              | Precios en USD, volumen en número de acciones                                                            |
-
-
-| Variable    | Descripción                                   | Tipo de dato | Familia de Variable |
-| ----------- | --------------------------------------------- | ------------ | ------------------- |
-| `Date`      | Fecha de cotización                           | datetime     | Temporal            |
-| `Open`      | Precio de apertura                            | float        | Financiera          |
-| `High`      | Precio máximo del día                         | float        | Financiera          |
-| `Low`       | Precio mínimo del día                         | float        | Financiera          |
-| `Close`     | Precio de cierre                              | float        | Financiera          |
-| `Volume`    | Número de acciones transadas                  | int          | Financiera          |
-
 
 ## 🌊 3. Project Flowchart
 ### - Diagrama de procesos
@@ -256,5 +234,6 @@
 --------
 
 >>>>>>> c618bf4 (Primer commit del proyecto mle2)
+
 
 
