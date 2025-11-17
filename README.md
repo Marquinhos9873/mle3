@@ -123,93 +123,16 @@
 | `Close`     | Precio de cierre                              | float        | Financiera          |
 | `Volume`    | Número de acciones transadas                  | int          | Financiera          |
 
-### 📌 Dataset: Property Sales, es un dataset partido en 2, solo se usará la parte de ma_lga pero se tomará en cuenta todo el dataset para el detallado de este en el README.
-
-| Ítem                      | Detalle                                                                                                                   |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **Fuente**                | [Página de Kaggle](https://www.kaggle.com/datasets/htagholdings/property-sales)    Authors: HtAG Holdings & Terry James                                      |
-| **Licencia**              | CC BY-SA 4.0                                                                                                              |
-| **Filas utilizadas**      | All                                                                                                        |
-| **Variable objetivo**     | `MA` – Precio de la propiedad                                                                                          |
-| **Familias de variables** | **Ubicación**: suburb, region, postcode <br> **Propiedad**: rooms, type, landsize <br> **Financiera**: price, year\_built |
-| **Valores faltantes**     | Algunos campos en `year_built`, `price`                                                                                   |
-| **Unidades**              | Superficie en m²                                                                                          |
-
-| Variable     | Descripción                                      | Tipo de dato | Familia de Variable |
-| ------------ | ------------------------------------------------ | ------------ | ------------------- |
-| `date`       | Fecha de la venta                                | datetime     | Temporal            |
-| `suburb`     | Suburbio de la propiedad                         | object       | Ubicación           |
-| `region`     | Región administrativa                            | object       | Ubicación           |
-| `postcode`   | Código postal                                    | int          | Ubicación           |
-| `rooms`      | Número de habitaciones                           | int          | Propiedad           |
-| `type`       | Tipo de propiedad (`h`: casa, `u`: unidad, etc.) | object       | Propiedad           |
-| `landsize`   | Tamaño del terreno (m²)                          | float        | Propiedad           |
-| `price`      | Precio de la venta                               | float        | Financiera          |
-| `year_built` | Año de construcción                              | int          | Propiedad           |
-
 
 ## 🌊 3. Project Flowchart
 ### - Diagrama de procesos
 
-1) Clasificación
+>>> Clasificación
 <img width="1473" height="791" alt="image" src="https://github.com/user-attachments/assets/14926916-1fac-4368-95aa-8efe4a951ef9" />
 
-2) Time Series
-
-<img width="1360" height="628" alt="image" src="https://github.com/user-attachments/assets/ed2044bd-c084-4689-bd02-c330cb0c12d7" />
 
 
-
-
-## ✉️ 4. Model Card:
-## a) TS v_1
-
-## 🔹 Detalles
-- **Autor:** Marco P  
-- **Fecha de release:** 25, July 2025  
-- **Versión:** 1.0  
-- **Model Type:** Time Series Ensemble
-
----
-
-## 🔹 Uso previsto
-- **Finalidad principal:** Este modelo fue creado con el objetivo de ayudara a predecir el comportamiento del precio ['MA'] dentro del dataset Property Sales – ma_lga_12345.csv.  
-- **Usuarios esperados:** Está orientado a ser utilizado por **Ejecutivos de vetnas, marketing y financieros, investigadores de mercador y estudiantes de grupos académicso afines**.  
-- **Fuera de Alcance y Consideraciones Éticas:** Este modelo **no está diseñado para reemplazar el criterio  profesional**, por lo que **no debe emplearse como único instrumento de predicción de la varianza del mercado**.  
-
----
-
-## 🔹 Datos de Entrenamiento
-- **Dataset utilizado:** Property Sales – ma_lga_12345.csv 
-- **Fuente:** [Property Sales – ma_lga_12345.csv](https://www.kaggle.com/datasets/htagholdings/property-sales?select=ma_lga_12345.csv) 
-- **Tamaño del dataset:**   
-- **Preprocesamiento aplicado:** Aplicación de proceso establecido, división train/test.  
-
----
-
-## 🔹 Datos de Evaluación
-- **Split de datos:** 80% entrenamiento / 20% prueba  
-- **Conjunto de evaluación:** 
-
----
-
-## 🔹 Métricas de Evaluación
-- **Silhouette:**   
-- **Davies-Bouldin:** 
-- **Calinski-Harabasz:**  
-- **ARI:** 
-- **NMI:** 
-
----
-
-## 🔹 Consideraciones Éticas
--   
-- **Considerarse como predicciones que ayudan a visualizar el posible panorama**, solo es un apoyo analítico.  
-- Uso indebido podría generar interpretaciones erróneas con impacto en las decisiones estrategicas de la empresa.  
-
----
-
-## b) Supervised Classification
+## Supervised Classification
 ## 🔹 Detalles
 - **Autor:** Marco P  
 - **Fecha de release:** 25, July 2025  
@@ -242,9 +165,9 @@
 
 ## 🔹 Métricas de Evaluación
 - **Accuracy:**   
-- **Recall (malignos):** 
-- **Precision (malignos):** 
-- **F1-score (malignos):** 
+- **Recall:** 
+- **Precision:** 
+- **F1-score:** 
 - **Confusion Matrix:** disponible en los experimentos registrados en MLflow  
 
 ---
@@ -263,16 +186,14 @@
 ## 🐈‍⬛  5. Estrategia de Git
 ### Ramas: 
 ### main: Contiene el código de producción, estable
+### add-ons: Agregados varios que se van desarrollando
+### develop: Ejecución
 
 ## 📊 6. Anexos
 ## https://www.kaggle.com/datasets/mdsultanulislamovi/student-stress-monitoring-datasets?select=Stress_Dataset.csv
 ## https://www.kaggle.com/datasets/mdsultanulislamovi/student-stress-monitoring-datasets?select=StressLevelDataset.csv
-## https://www.kaggle.com/datasets/vijayvvenkitesh/microsoft-stock-time-series-analysis
-## https://www.kaggle.com/datasets/htagholdings/property-sales?select=ma_lga_12345.csv
 
 ## 💥 7. Resultados y Conclusiones
-### Sufrí varios problemas de compatibilidad entre dependencias y no puedo cargar los resultas con MLFlow a Dagshub pero si esta todo en el código.
-### Los resultados son no concluyentes debido a la imposibilidad de cargarlos al servidor de servicios mlflow y dagshub para su posterior reporducibilidad y almacenamiento, se esperaba un comportamiento muy parecido/similar al demostrado en clase.
 
 
 
@@ -335,4 +256,5 @@
 --------
 
 >>>>>>> c618bf4 (Primer commit del proyecto mle2)
+
 
