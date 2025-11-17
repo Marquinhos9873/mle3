@@ -1,0 +1,14 @@
+artifact_uri: file:///home/marcoloq/mle2/notebooks/mlruns/0/e08ac0d613fb47d5b05da7b88d78fe33/artifacts
+end_time: 1763404493160
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e08ac0d613fb47d5b05da7b88d78fe33
+run_name: peaceful-grouse-381
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763404270881
+status: 3
+tags: []
+user_id: marcoloq

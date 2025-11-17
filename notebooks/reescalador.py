@@ -35,8 +35,8 @@ class scaler_process:
     def plot_variance(self):
         if self.explained_variance is None:
             raise ValueError("Ejecuta run_scaler() antes de graficar la varianza.")
-
-        plt.plot(range(1, len(self.explained_variance) + 1), self.explained_variance, marker="o")
+        componentes = list(range(1, len(self.explained_variance) + 1))
+        sns.barplot(x=componentes, y=self.explained_variance)
         plt.title("Varianza Explicada por Componente")
         plt.xlabel("Componente")
         plt.ylabel("Proporción de Varianza Explicada")
