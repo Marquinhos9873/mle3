@@ -30,8 +30,7 @@
     - Diagrama de procesos
 
 ✉️ 4. Model Card:
-    a) TS v_1
-    b) Supervised Classification
+    >>> Supervised Classification
     
 🐈‍⬛  5. Estrategia de Git
 
@@ -234,6 +233,7 @@
 --------
 
 >>>>>>> c618bf4 (Primer commit del proyecto mle2)
+
 
 
 
