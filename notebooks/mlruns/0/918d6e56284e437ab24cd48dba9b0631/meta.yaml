@@ -1,5 +1,5 @@
 artifact_uri: file:///home/marcoloq/mle2/notebooks/mlruns/0/918d6e56284e437ab24cd48dba9b0631/artifacts
-end_time: null
+end_time: 1763343351519
 entry_point_name: ''
 experiment_id: '0'
 lifecycle_stage: active
@@ -9,6 +9,6 @@ source_name: ''
 source_type: 4
 source_version: ''
 start_time: 1763343004883
-status: 1
+status: 3
 tags: []
 user_id: marcoloq
