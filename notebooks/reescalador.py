@@ -1,12 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.decomposition import PCA
 
 
 class scaler_process:
-    def __init__(self, data: pd.DataFrame, scale_method: StandardScaler, pipeline_name: str):
+    def __init__(self, data: pd.DataFrame, scale_method, pipeline_name: str):
         self.scale_method = scale_method
         self.data = data
         self.pca = PCA(n_components=2)

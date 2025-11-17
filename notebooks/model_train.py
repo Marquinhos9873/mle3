@@ -187,24 +187,21 @@ class Processing:
         "CatBoosting Classifier": CatBoostClassifier(task_type='GPU', devices='0', early_stopping_rounds=100, **params["CatBoosting Classifier"])
     }
     
-    params={"Decision Tree": {
-                        "criterion": ['gini','log_loss'],
-                        "max_depth": [0, 10, 12, 16],
-                        "min_samples_split": [2, 3, 4, 5]
-                    },
+    params={"Decision Tree": {'criterion': ['gini','log_loss'],
+                                'max_depth': [0, 10, 12, 16],
+                                'min_samples_split':[2, 3, 4, 5]},
     
-                     "Random Forest":{
-                        "n_estimators" : [110 , 115, 125, 130],
-                        "criterion" : ['gini' ,'log_loss', 'entropy'],
-                        "max_depth" : [None, 5, 7 , 8]
-                    },
+            "Random Forest":{'n_estimators' : [110 , 115, 125, 130],
+                                'criterion' : ['gini' ,'log_loss', 'entropy'],
+                                'max_depth' : [None, 5, 7 , 8]},
     
-                    "Gradient Boosting": {
-                        "n_estimators" : [110 , 115, 125, 130],
-                        "max_depth" : [None, 5, 7 , 8],
-                        "learning_rate": [0.0045 , 0.01, 0.05, 0.10],
-                        "min_samples_split": [2, 3, 4, 5],
+                    "Gradient Boosting":{
+                        'n_estimators' : [110 , 115, 125, 130],
+                        'max_depth' : [None, 5, 7 , 8],
+                        'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
+                        'min_samples_split':[2, 3, 4, 5],
                     },
+                    
                     "XGBClassifier":{
                         'learning_rate':[0.0045 , 0.01, 0.05, 0.10],
                         'max_depth': [5, 6, 7],
