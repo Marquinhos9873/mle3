@@ -34,7 +34,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 from interpret import show
 import reescalador as rsc
-import hyperparams as hparams
+
 import interpretabilidad as inter
 
 
