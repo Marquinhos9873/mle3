@@ -36,14 +36,17 @@ class scaler_process:
     def plot_variance(self):
         if self.explained_variance is None:
             raise ValueError("Ejecuta run_scaler() antes de graficar la varianza.")
+    
         componentes = list(range(1, len(self.explained_variance) + 1))
-        sns.barplot(x=componentes, y=self.explained_variance)
-        plt.title("Varianza Explicada por Componente")
-        plt.xlabel("Componente")
-        plt.ylabel("Proporción de Varianza Explicada")
+    
+        fig, ax = plt.subplots()       
+        sns.barplot(x=componentes, y=self.explained_variance, ax=ax)
+        ax.set_title("Varianza Explicada por Componente")
+        ax.set_xlabel("Componente")
+        ax.set_ylabel("Proporción de Varianza Explicada")
+    
+        plt.tight_layout()
         plt.show()
+    
+        return fig 
 ### scaler_table.plot_variance()
-    def save_and_log(fig, filename):
-        path = os.path.join(SAVE_DIR, filename)
-        fig.savefig(path, dpi=300, bbox_inches="tight")
-        mlflow.log_artifact(path)
