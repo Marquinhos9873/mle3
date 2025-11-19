@@ -1,4 +1,5 @@
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
@@ -42,3 +43,7 @@ class scaler_process:
         plt.ylabel("Proporción de Varianza Explicada")
         plt.show()
 ### scaler_table.plot_variance()
+    def save_and_log(fig, filename):
+        path = os.path.join(SAVE_DIR, filename)
+        fig.savefig(path, dpi=300, bbox_inches="tight")
+        mlflow.log_artifact(path)
